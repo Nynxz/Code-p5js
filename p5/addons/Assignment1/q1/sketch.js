@@ -13,7 +13,7 @@ function draw() {
     background("#6569fb");
     for(i = 0; i < numSquares; i++) {
       fill(color(0, 225, 175, (255/numSquares * (i + 1))));
-      square(100 * i + 12.5, 87.5, 75, 75 , 15);
+      square(100 * i + 12.5, 87.5, 75, 15);
     }
   }
 }
