@@ -1,4 +1,4 @@
-let boxLength = 250, padding = boxLength/10, boxAmountWidth = 4, boxAmountHeight = 6;
+let boxLength = 250, padding = boxLength/10, boxAmountWidth = 6, boxAmountHeight = 6;
 
 function setup() {
 
@@ -13,7 +13,7 @@ function setup() {
       noStroke();
       square((x * boxLength) + ((x + .5) * padding), (y * boxLength) + ((y + .5) * padding), boxLength);
       parallelLines(x, y, 15);
-      shapeDrawer(x,y);
+      shapeDrawer(x,y, 5);
     }
   }
 }
@@ -54,16 +54,32 @@ function parallelLines(x, y, lineCount){
             (boxLength * y) + ((boxLength / lineCount) * i) + (((y+.825) * padding)),     //Y1
             (boxLength * (x+1)) + (padding/2) * ((x * 1) + (x + 1)),                      //X2
             (boxLength * y) + ((boxLength / lineCount) * i) + (((y+.825) * padding)));    //Y2
-            console.log('line');
+            //console.log('line');
       }
 }
 
-function shapeDrawer(x, y) {
+function shapeDrawer(x, y, lineCount) {
   noStroke();
-
   //CIRCLE
   if((x % 2 == 0 && y % 3 == 0)){
     fill(255,0,0);
-    circle((boxLength/2) + padding/2, boxLength/2 + padding/2, boxLength * .75);
+    circle(
+      (boxLength * (x+.5)) + (padding / 2) * ((x * 1) + (x + 1)),
+      (boxLength * (y+.5)) + (padding / 2) * ((y * 1) + (y + 1)),
+      boxLength * .75);
+   //console.log('circle');
+
+    stroke(255,255,255);
+    for(i = 0; i < 5 ; i++){
+      console.log('line');
+
+      line(
+        sin(x) * (boxLength * (x+.5)) + (padding / 2) * ((x * 1) + (x + 1)),
+        cos(y) *(boxLength * (y+.5)) + (padding / 2) * ((y * 1) + (y + 1)),
+        boxLength + (padding/2),
+        boxLength + (padding/2)
+      );
+    }
+
   }
 }
