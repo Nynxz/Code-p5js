@@ -1,9 +1,9 @@
-let boxLength = 500;    // <---- Scale
+let boxLength = 250;    // <---- Scale
 
 let padding = boxLength/10, boxAmountWidth = 4, boxAmountHeight = 6;
 
 function setup() {
-  angleMode(DEGREES)
+  //angleMode(DEGREES)
   createCanvas((boxLength + padding) * boxAmountWidth, (boxLength + padding) * boxAmountHeight);
   background("#a1a1a1");
 
@@ -61,7 +61,7 @@ function parallelLines(x, y, lineCount){
 }
 
 
-function shapeDrawer(x, y, lineCount) {
+function shapeDrawer(x, y) {
   noStroke();
 
   //CIRCLE
@@ -72,45 +72,26 @@ function shapeDrawer(x, y, lineCount) {
       (boxLength * (x+.5)) + (padding / 2) * (2*x+1),
       (boxLength * (y+.5)) + (padding / 2) * (2*y+1),
       circleSize);
-   //console.log('circle');
-
     stroke(255,255,0);
-
-    //mouseX
-    //TODO  -- THIS IS BROKEN
-    for(i = 0; i < 15 ; i++){
-      let a = i * boxLength
-     // console.log('line');
+    for(i = 0, a = 7; i < 15 ; i++){
+      if(i > 15/2){ a-- } else { a++}
       line(
-        //START POINT
-        (boxLength * (x  )) + boxLength* .15 + (padding / 2) * (2*x+1) + (i * boxLength/20),   //X1  GOOD
-        (boxLength * (y  )) + (padding / 2) * (2*y+1) - (sin(a) - mouseX),   //Y1
+        //START POINT     JANK CODE - TRIAL AND ERROR
+        (boxLength * (x  )) + boxLength * .15 + (padding / 2) * (2*x+1) + (i * boxLength/20),    //X1  GOOD
+        (boxLength * (y  )) + (padding / 2) * (2*y+1) + boxLength/2 - a * (boxLength / 36),    //Y1  GOOD
         
         //END POINT
-        (boxLength * (x  )) + boxLength * .15 +(padding / 2) * (2*x+1) + (i * boxLength/20) ,  //X2  GOOD
-        (boxLength * (y+1)) + (padding / 2) * (2*y+1) - (sin(a) + mouseX)   //Y2
+        (boxLength * (x  )) + boxLength * .15 + (padding / 2) * (2*x+1) + (i * boxLength/20),     //X2  GOOD
+        (boxLength * (y+1)) + (padding / 2) * (2*y+1) - boxLength/2 + a * (boxLength / 36)     //Y2  GOOD
       );
-      if(mouseIsPressed){
-        console.log("X: " + mouseX + " Y: " + mouseY);
-      }
-      
-      /*
-            line(
-        (boxLength /5 * ((x + 1) + (x*(4.5))) + padding/2 * i ), //X1
-        ((boxLength/2  * 1.175 + (y+1)) + sin((-PI) * (i+2.1) * PI) * 100),  //Y1
-        (boxLength /5 * (x + 1 + (x*(4.5)))) + padding/2 * i  ,    //X2
-        ((boxLength/2 * 0.975 + (y + 1)) + sin((PI) * (i+2.1) * PI) * 100)//Y2
-      );
-      */
     }
-
     noFill()
     stroke(255,0,0);
-    strokeWeight(10);
+    strokeWeight(boxLength/18);
     circle(
       (boxLength * (x+.5)) + (padding / 2) * (2*x+1),
       (boxLength * (y+.5)) + (padding / 2) * (2*y+1),
-      boxLength * .72);
+      boxLength * .8);
 
   }
 }
