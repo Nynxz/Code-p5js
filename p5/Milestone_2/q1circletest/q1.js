@@ -1,97 +1,250 @@
-let boxLength = 250;    // <---- Scale
+let boxLength = 250, boxAmountWidth = 6, boxAmountHeight = 9;   // <---- SCALE
 
-let padding = boxLength/10, boxAmountWidth = 4, boxAmountHeight = 6;
+const padding = boxLength / 10;
+const halfPadding = padding / 2;
 
 function setup() {
-  //angleMode(DEGREES)
+
   createCanvas((boxLength + padding) * boxAmountWidth, (boxLength + padding) * boxAmountHeight);
   background("#a1a1a1");
 
   strokeCap(SQUARE);
-  for(y = 0;y < boxAmountHeight;y++){
-    for(x = 0;x < boxAmountWidth;x++){
+  for (y = 0; y < boxAmountHeight; y++) {
+    for (x = 0; x < boxAmountWidth; x++) {
       backgroundChanger(y);
 
       noStroke();
-      square((x * boxLength) + ((x + .5) * padding), (y * boxLength) + ((y + .5) * padding), boxLength);
+      rectMode(CORNER);
+      square(x * boxLength + (x + .5) * padding, y * boxLength + (y + .5) * padding, boxLength);
+
       parallelLines(x, y, 15);
-      shapeDrawer(x,y, 5);
+      shapeDrawer(x, y, 5);
     }
   }
 }
 
-function backgroundChanger(y){
+function backgroundChanger(y) {
   strokeWeight(5);
-  if(y % 3 == 0){
+  if (y % 3 == 0) {
     fill('#FF0000'); //1ST PART - 'On Red'
   }
-  if(y % 3 == 1){
+  if (y % 3 == 1) {
     fill('#FFFF00'); //2ND PART - 'On Yellow
   }
-  if(y % 3 == 2){
+  if (y % 3 == 2) {
     fill('#0000FF'); //3RD PART - 'On Blue'
   }
 }
 
-//TODO  -- Wave opacity ;) D:
-function strokeChanger(x, y){
-  if(        (x % 2 == 0 && y % 3 == 0) || (x % 2 == 1 && y % 3 == 1)){
-    stroke(0,0, 255);     //BLUE
-  } else if ((x % 2 == 0 && y % 3 == 1) || (x % 2 == 1 && y % 3 == 2)){
-    stroke(255,0,0);     //RED
-  } else if ((x % 2 == 0 && y % 3 == 2) || (x % 2 == 1 && y % 3 == 0)){
-    stroke(255,255,0);   //YELLOW
-  }else {
-    stroke(0,0,0);
+function strokeChanger(x, y) {
+  if ((x % 2 == 0 && y % 3 == 0) || (x % 2 == 1 && y % 3 == 1)) {
+    stroke(0, 0, 255);     //BLUE
+  } else if ((x % 2 == 0 && y % 3 == 1) || (x % 2 == 1 && y % 3 == 2)) {
+    stroke(255, 0, 0);     //RED
+  } else if ((x % 2 == 0 && y % 3 == 2) || (x % 2 == 1 && y % 3 == 0)) {
+    stroke(255, 255, 0);   //YELLOW
+  } else {
+    stroke(0, 0, 0);
   }
 }
 
-function parallelLines(x, y, lineCount){
-      strokeChanger(x, y);
-      for(i = 0; i < lineCount; i++){
-        let lineThickness = boxLength / 50;
-        strokeWeight(lineThickness);
-          line( 
-            (boxLength * (x)) + (padding / 2) * (2*x+1),                      //X1
-            (boxLength * y) + ((boxLength / lineCount) * i) + (((y+.825) * padding)) ,     //Y1
-            (boxLength * (x+1)) + (padding/2) * (2*x+1),                      //X2
-            (boxLength * y) + ((boxLength / lineCount) * i) + (((y+.825) * padding)));    //Y2
-            //console.log('line');
-      }
+function parallelLines(x, y, lineCount) {
+  strokeChanger(x, y);
+  let lineThickness = boxLength / 50;
+  for (i = 0; i < lineCount; i++) {
+    strokeWeight(lineThickness);
+    line(
+      boxLength * x + (padding * (2 * x + 1)) * .5,                                       //X1
+      boxLength * y + padding * y + 0.825 * padding + (boxLength / lineCount) * i,        //Y1
+      boxLength * (x + 1) + (padding * (2 * x + 1)) * .5,                                 //X2
+      boxLength * y + padding * y + 0.825 * padding + (boxLength / lineCount) * i         //Y2
+    );
+  }
 }
 
-
 function shapeDrawer(x, y) {
-  noStroke();
 
-  //CIRCLE
-  if((x % 2 == 0 && y % 3 == 0)){
-    let circleSize = boxLength * .75;
-    fill(255,0,0);
-    circle(
-      (boxLength * (x+.5)) + (padding / 2) * (2*x+1),
-      (boxLength * (y+.5)) + (padding / 2) * (2*y+1),
-      circleSize);
-    stroke(255,255,0);
-    for(i = 0, a = 7; i < 15 ; i++){
-      if(i > 15/2){ a-- } else { a++}
-      line(
-        //START POINT     JANK CODE - TRIAL AND ERROR
-        (boxLength * (x  )) + boxLength * .15 + (padding / 2) * (2*x+1) + (i * boxLength/20),    //X1  GOOD
-        (boxLength * (y  )) + (padding / 2) * (2*y+1) + boxLength/2 - a * (boxLength / 36),    //Y1  GOOD
-        
-        //END POINT
-        (boxLength * (x  )) + boxLength * .15 + (padding / 2) * (2*x+1) + (i * boxLength/20),     //X2  GOOD
-        (boxLength * (y+1)) + (padding / 2) * (2*y+1) - boxLength/2 + a * (boxLength / 36)     //Y2  GOOD
-      );
+  if ((x % 2 == 0 && y % 3 == 0)) {
+    CIRCLE = new Shape(x, y, 'circle', 'red', 'yellow');
+  }
+
+  if ((x % 2 == 0 && y % 3 == 1)) {
+    SQUARE = new Shape(x, y, 'square', 'yellow', 'blue');
+  }
+
+  if ((x % 2 == 0 && y % 3 == 2)) {
+    TRIANGLE = new Shape(x, y, 'triangle', 'blue', 'red');
+  }
+
+  if ((x % 2 == 1 && y % 3 == 0)) {
+    RECTANGLE = new Shape(x, y, 'rectangle', 'red', 'blue');
+  }
+
+  if ((x % 2 == 1 && y % 3 == 1)) {
+    TRAPEZOID = new Shape(x, y, 'trapezoid', 'yellow', 'red');
+  }
+
+  if ((x % 2 == 1 && y % 3 == 2)) {
+    PARALLELOGRAM = new Shape(x, y, 'parallelogram', 'blue', 'yellow');
+  }
+
+}
+
+class Shape {
+  constructor(x, y, shape, shapeFillColour, strokeColour) {
+    this.x = x;
+    this.y = y;
+    this.shape = shape;
+    this.shapeFillColour = shapeFillColour
+    this.strokeColour = strokeColour;
+    this.xOff = 2 * x + 1;
+    this.yOff = 2 * y + 1;
+    this.drawoutline = false;
+    this.drawShape();
+  }
+
+  drawShape() {
+    rectMode(CENTER);
+    if (this.drawoutline) {
+      strokeWeight(boxLength / 18);
+      stroke(this.shapeFillColour);
+      noFill();
+    } else {
+      strokeWeight(boxLength / 50);
+      stroke(this.strokeColour);
+      fill(this.shapeFillColour);
     }
-    noFill()
-    stroke(255,0,0);
-    strokeWeight(boxLength/18);
-    circle(
-      (boxLength * (x+.5)) + (padding / 2) * (2*x+1),
-      (boxLength * (y+.5)) + (padding / 2) * (2*y+1),
-      boxLength * .8);
 
+    switch (this.shape) {
+      /*                                                   CIRCLE                                                                     */
+      case 'circle':
+        let circleSize = boxLength * .78;
+        circle(
+          boxLength * (this.x + .5) + (halfPadding) * (this.xOff),                                                          //CENTERX
+          boxLength * (this.y + .5) + (halfPadding) * (this.yOff),                                                          //CENTERY
+          circleSize                                                                                                        //SIZE
+        );
+        if (!this.drawoutline) {
+          for (i = 0, this.a = 7; i < 15; i++) {
+            if (i > 15 / 2) { this.a-- } else { this.a++ }
+            line(
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,              //X1
+              (boxLength * y) + ((boxLength + padding * (2 * y + 1)) / 2) - (boxLength * this.a / 37),                      //Y1    
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,              //X2
+              (boxLength * y) + ((boxLength + padding * (2 * y + 1)) / 2) + (boxLength * this.a / 37)                       //Y2
+            );
+          }
+        }
+        break;
+      /*                                                   RECTANGLE                                                                  */
+      case 'rectangle':
+        rect(
+          (boxLength * (this.x + .5)) + (halfPadding) * (this.xOff),                                                        //CENTERX
+          (boxLength * (this.y + .5)) + (halfPadding) * (this.yOff),                                                        //CENTERY
+          boxLength * .8,                                                                                                   //WIDTH
+          boxLength * .4);                                                                                                  //HEIGHT
+        if (!this.drawoutline) {
+          for (i = 0; i < 15; i++) {
+            line(
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,            //X1
+              (boxLength * (y)) + (halfPadding) * (this.yOff) + boxLength / 2 - (boxLength * .2),                         //Y1 
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,            //X2
+              (boxLength * (y + 1)) + (halfPadding) * (this.yOff) - boxLength / 2 + (boxLength * .2));                    //Y2 
+          }
+        }
+        break;
+      /*                                                   SQUARE                                                                     */
+      case 'square':
+        square(
+          (boxLength * (this.x + .5)) + (halfPadding) * (this.xOff),                                                        //CENTERX
+          (boxLength * (this.y + .5)) + (halfPadding) * (this.yOff),                                                        //CENTERY
+          boxLength * .70);                                                                                                 //SIZE
+        if (!this.drawoutline) {
+          for (i = 0; i < 15; i++) {
+            line(
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,            //X1
+              (boxLength * (y)) + (halfPadding) * (this.yOff) + boxLength / 2 - (boxLength * .35),                        //Y1
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,            //X2
+              (boxLength * (y + 1)) + (halfPadding) * (this.yOff) - boxLength / 2 + (boxLength * .35)                     //Y2
+            );
+          }
+        }
+        break;
+      /*                                                   TRAPEZOID                                                                  */
+      case 'trapezoid':
+        quad(
+          (boxLength * (this.x + .35)) + (halfPadding) * (this.xOff),                                                       //X1  TOP     LEFT
+          (boxLength * (this.y + .27)) + (halfPadding) * (this.yOff),                                                       //Y1  TOP     LEFT
+          (boxLength * (this.x + .65)) + (halfPadding) * (this.xOff),                                                       //X2  TOP     RIGHT
+          (boxLength * (this.y + .27)) + (halfPadding) * (this.yOff),                                                       //Y2  TOP     RIGHT
+          (boxLength * (this.x + .87)) + (halfPadding) * (this.xOff),                                                       //X3  BOTTOM  RIGHT
+          (boxLength * (this.y + .72)) + (halfPadding) * (this.yOff),                                                       //Y3  BOTTOM  RIGHT
+          (boxLength * (this.x + .13)) + (halfPadding) * (this.xOff),                                                       //X4  BOTTOM  LEFT
+          (boxLength * (this.y + .72)) + (halfPadding) * (this.yOff));                                                      //Y4  BOTTOM  LEFT
+        if (!this.drawoutline) {
+          for (i = 0, this.a = 25; i < 15; i++) {
+            if (i > 10) { this.a -= 26 } else if (i < 5) { this.a += 26 }
+            line(
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,          //X1
+              (boxLength * (y)) + (halfPadding) * (this.yOff) + boxLength * .9 - this.a * (boxLength / 250),            //Y1
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,          //X2
+              (boxLength * (y + 1)) + (halfPadding) * (this.yOff) - boxLength / 2 + 15 * (boxLength / 70)               //Y2
+            );
+          }
+        }
+        break;
+      /*                                                    TRIANGLE                                                                  */
+      case 'triangle':
+        triangle(
+          (boxLength * (this.x + .50)) + (halfPadding) * (this.xOff),                                                       //X1  TOP      MIDDLE
+          (boxLength * (this.y + .15)) + (halfPadding) * (this.yOff),                                                       //Y1  TOP      MIDDLE
+          (boxLength * (this.x + .13)) + (halfPadding) * (this.xOff),                                                       //X2  BOTTOM   LEFT
+          (boxLength * (this.y + .86)) + (halfPadding) * (this.yOff),                                                       //Y2  BOTTOM   LEFT
+          (boxLength * (this.x + .87)) + (halfPadding) * (this.xOff),                                                       //X3  BOTTOM   RIGHT
+          (boxLength * (this.y + .86)) + (halfPadding) * (this.yOff));                                                      //Y3  BOTTOM   RIGHT
+        if (!this.drawoutline) {
+          for (i = 0, this.a = 1; i < 15; i++) {
+            if (i > 15 / 2) { this.a -= 25 } else { this.a += 25 }
+            line(
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,            //X1 
+              (boxLength * (y)) + (halfPadding) * (this.yOff) + boxLength * .9 - this.a * (boxLength / 250),              //Y1 
+              ((boxLength * x) + (boxLength * 0.15) + (x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,            //X2 
+              (boxLength * (y + 1)) + (halfPadding) * (this.yOff) - boxLength / 2 + 15 * (boxLength / 40)                 //Y2
+            );
+          }
+        }
+        break;
+      /*                                                  PARALLELOGRAM                                                               */
+      case 'parallelogram':
+        quad(
+          (boxLength * (this.x + .35)) + (halfPadding) * (this.xOff),                                                       //X1  TOP      LEFT
+          (boxLength * (this.y + .27)) + (halfPadding) * (this.yOff),                                                       //Y1  TOP      LEFT
+          (boxLength * (this.x + .87)) + (halfPadding) * (this.xOff),                                                       //X2  TOP      RIGHT
+          (boxLength * (this.y + .27)) + (halfPadding) * (this.yOff),                                                       //Y2  TOP      RIGHT
+          (boxLength * (this.x + .65)) + (halfPadding) * (this.xOff),                                                       //X3  BOTTOM   RIGHT
+          (boxLength * (this.y + .73)) + (halfPadding) * (this.yOff),                                                       //Y3  BOTTOM   RIGHT
+          (boxLength * (this.x + .13)) + (halfPadding) * (this.xOff),                                                       //X4  BOTTOM   LEFT
+          (boxLength * (this.y + .73)) + (halfPadding) * (this.yOff));                                                      //Y4  BOTTOM   LEFT
+        if (!this.drawoutline) {
+          for (i = 0, this.t = boxLength / 2.7, this.b = 0; i < 15; i++) {
+            if (i < 4) { (this.t -= i * boxLength / 18) } else { this.t = 0 }
+            if (i > 10) { this.b += i * boxLength / 125 }
+            line(
+              ((boxLength * this.x) + (boxLength * 0.15) + (this.x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,    //X1
+              (boxLength * (this.y)) + (halfPadding) * (this.yOff) + boxLength * .7 - this.b,                          //Y1 
+              ((boxLength * this.x) + (boxLength * 0.15) + (this.x * padding + 0.5 * padding)) + (0.05 * boxLength) * i,    //X2  
+              (boxLength * (this.y + 1)) + (halfPadding) * (this.yOff) - boxLength * .7 + this.t                       //Y2  
+            );
+          }
+        }
+        break;
+      default:
+        console.log('INCORRECT SPELLING ON SHAPE TYPE DECLARATION');
+        break;
+    }
+    if (!this.drawoutline) {
+      this.drawoutline++;
+      this.drawShape();
+    }
   }
 }
