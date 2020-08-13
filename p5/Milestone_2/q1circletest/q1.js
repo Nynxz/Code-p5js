@@ -1,4 +1,5 @@
-let boxLength = 250, boxAmountWidth = 6, boxAmountHeight = 9;   // <---- SCALE
+let boxLength = 100, boxAmountWidth = 12, boxAmountHeight = 18;   // <---- SCALE
+
 
 const padding = boxLength / 10;
 const halfPadding = padding / 2;
@@ -6,7 +7,7 @@ const halfPadding = padding / 2;
 function setup() {
 
   createCanvas((boxLength + padding) * boxAmountWidth, (boxLength + padding) * boxAmountHeight);
-  background("#a1a1a1");
+  background("#A1A1A1");
 
   strokeCap(SQUARE);
   for (y = 0; y < boxAmountHeight; y++) {
@@ -17,7 +18,7 @@ function setup() {
       rectMode(CORNER);
       square(x * boxLength + (x + .5) * padding, y * boxLength + (y + .5) * padding, boxLength);
 
-      parallelLines(x, y, 15);
+      parallelLines(x, y, 14);
       shapeDrawer(x, y, 5);
     }
   }
@@ -50,14 +51,15 @@ function strokeChanger(x, y) {
 
 function parallelLines(x, y, lineCount) {
   strokeChanger(x, y);
+  let offset = boxLength/padding;
   let lineThickness = boxLength / 50;
   for (i = 0; i < lineCount; i++) {
     strokeWeight(lineThickness);
     line(
       boxLength * x + (padding * (2 * x + 1)) * .5,                                       //X1
-      boxLength * y + padding * y + 0.825 * padding + (boxLength / lineCount) * i,        //Y1
+      ((boxLength * y) + (boxLength * 0.05) + (y * padding + 0.5 * padding)) + (0.07 * boxLength) * i,        //Y1
       boxLength * (x + 1) + (padding * (2 * x + 1)) * .5,                                 //X2
-      boxLength * y + padding * y + 0.825 * padding + (boxLength / lineCount) * i         //Y2
+      ((boxLength * y) + (boxLength * 0.05) + (y * padding + 0.5 * padding)) + (0.07 * boxLength) * i         //Y2
     );
   }
 }
@@ -106,7 +108,7 @@ class Shape {
   drawShape() {
     rectMode(CENTER);
     if (this.drawoutline) {
-      strokeWeight(boxLength / 18);
+      strokeWeight(boxLength / 16);
       stroke(this.shapeFillColour);
       noFill();
     } else {
@@ -178,9 +180,9 @@ class Shape {
           (boxLength * (this.x + .65)) + (halfPadding) * (this.xOff),                                                       //X2  TOP     RIGHT
           (boxLength * (this.y + .27)) + (halfPadding) * (this.yOff),                                                       //Y2  TOP     RIGHT
           (boxLength * (this.x + .87)) + (halfPadding) * (this.xOff),                                                       //X3  BOTTOM  RIGHT
-          (boxLength * (this.y + .72)) + (halfPadding) * (this.yOff),                                                       //Y3  BOTTOM  RIGHT
+          (boxLength * (this.y + .74)) + (halfPadding) * (this.yOff),                                                       //Y3  BOTTOM  RIGHT
           (boxLength * (this.x + .13)) + (halfPadding) * (this.xOff),                                                       //X4  BOTTOM  LEFT
-          (boxLength * (this.y + .72)) + (halfPadding) * (this.yOff));                                                      //Y4  BOTTOM  LEFT
+          (boxLength * (this.y + .74)) + (halfPadding) * (this.yOff));                                                      //Y4  BOTTOM  LEFT
         if (!this.drawoutline) {
           for (i = 0, this.a = 25; i < 15; i++) {
             if (i > 10) { this.a -= 26 } else if (i < 5) { this.a += 26 }
@@ -199,9 +201,9 @@ class Shape {
           (boxLength * (this.x + .50)) + (halfPadding) * (this.xOff),                                                       //X1  TOP      MIDDLE
           (boxLength * (this.y + .15)) + (halfPadding) * (this.yOff),                                                       //Y1  TOP      MIDDLE
           (boxLength * (this.x + .13)) + (halfPadding) * (this.xOff),                                                       //X2  BOTTOM   LEFT
-          (boxLength * (this.y + .86)) + (halfPadding) * (this.yOff),                                                       //Y2  BOTTOM   LEFT
+          (boxLength * (this.y + .84)) + (halfPadding) * (this.yOff),                                                       //Y2  BOTTOM   LEFT
           (boxLength * (this.x + .87)) + (halfPadding) * (this.xOff),                                                       //X3  BOTTOM   RIGHT
-          (boxLength * (this.y + .86)) + (halfPadding) * (this.yOff));                                                      //Y3  BOTTOM   RIGHT
+          (boxLength * (this.y + .84)) + (halfPadding) * (this.yOff));                                                      //Y3  BOTTOM   RIGHT
         if (!this.drawoutline) {
           for (i = 0, this.a = 1; i < 15; i++) {
             if (i > 15 / 2) { this.a -= 25 } else { this.a += 25 }
