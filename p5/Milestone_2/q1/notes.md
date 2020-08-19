@@ -13,6 +13,7 @@ IDEAS
     
      [X]The  horizontal lines do not enter the figures.(3marks)
     
+    Challenge (1 mark): Make the drawingsscale with the size of the canvas. This can be done by keeping track  of  all  required  positions  as  a  percentage  of  the  part  of  the  drawing  they  are  in,  and  then multiplying that percentage bythe size of the drawing and offset of the part they are in.
 
     SHAPES = 
     
@@ -23,7 +24,7 @@ IDEAS
       
 
 
-    - Draw a wall with “irregularwavy color bands”. Hint: you canuse curveVertex and random functions in p5js library. (2marks)
+    - Draw a wall with “irregularwavy color bands”. Hint: you can use curveVertex and random functions in p5js library. (2marks)
     
     
     Challenge (1 mark): Make the drawingsscale with the size of the canvas. This can be done by keeping track  of  all  required  positions  as  a  percentage  of  the  part  of  the  drawing  they  are  in,  and  then multiplying that percentage bythe size of the drawing and offset of the part they are in.
