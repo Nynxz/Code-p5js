@@ -9,7 +9,7 @@ let sliderPasses, sliderSegments, sliderThickness, sliderAmplitude, sliderLines,
 
 function setup() {
     createCanvas(cWidth, cHeight);
-    
+    //#region SLIDERS
     sliderPasses = createSlider(1, 50, 10, 1);
     sliderPasses.style('width', '100px');
     sliderSegments = createSlider(0, 100, 10, 1);
@@ -22,6 +22,7 @@ function setup() {
     sliderLines.style('width', '100px');
     sliderFPS = createSlider(.5, 30, 15, .5);
     sliderFPS.style('width', '30px');
+    //#endregion
 }
 
 function draw() {   

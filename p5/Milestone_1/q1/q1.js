@@ -1,6 +1,15 @@
 let numSquares, slider;
 
 function setup() {
+
+    let hun = 100;
+    let top = 300;
+
+    for(let i = 0; i < 10; i++){
+      print(top - hun + (top-hun/10*i));
+    }
+  
+
   slider = createSlider(0, 16, 5, 1);
   slider.position(0, 250);
   slider.style('width', '250px');
