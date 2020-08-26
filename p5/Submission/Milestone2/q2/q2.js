@@ -20,7 +20,7 @@ function setup() {
     sliderAmplitude.style('width', '100px');
     sliderLines = createSlider(0, 100, 25, 1);
     sliderLines.style('width', '100px');
-    sliderFPS = createSlider(.5, 30, 15, .5);
+    sliderFPS = createSlider(.5, 30, .5, .5);
     sliderFPS.style('width', '30px');
     //#endregion
 }

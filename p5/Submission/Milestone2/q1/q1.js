@@ -1,4 +1,4 @@
-let boxLength = 250 , boxAmountWidth = 10, boxAmountHeight = 30;   // <---- SCALE
+let boxLength = 250 , boxAmountWidth = 2, boxAmountHeight = 3;   // <---- SCALE
 
 const padding = boxLength / 10;
 const halfPadding = padding / 2;
