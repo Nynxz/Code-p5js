@@ -5,7 +5,7 @@ let rainbowColours = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'vio
 let randomColours = ['red', 'blue', 'aqua', 'green', 'orange', 'purple', 'pink', 'yellow', 'fuchsia', 'lightblue'];
 let christmasColours = ['red', 'red', 'green', 'green', 'white'];
 let australianColours = ['green', 'green', 'yellow', 'yellow', 'white'];
-let sliderPasses, sliderSegments, sliderThickness, sliderAmplitude, sliderLines, sliderOffset, sliderFPS;
+let sliderPasses, sliderSegments, sliderThickness, sliderAmplitude, sliderLines, sliderOffset, sliderFPS, dropdownColours;
 
 function setup() {
     createCanvas(cWidth, cHeight);
@@ -14,14 +14,20 @@ function setup() {
     sliderPasses.style('width', '100px');
     sliderSegments = createSlider(0, 100, 10, 1);
     sliderSegments.style('width', '100px');
-    sliderThickness = createSlider(1, 25, 5, 1);
+    sliderThickness = createSlider(1, 25, 20, 1);
     sliderThickness.style('width', '50px');
     sliderAmplitude = createSlider(0, 25, 15, 1);
     sliderAmplitude.style('width', '100px');
     sliderLines = createSlider(0, 100, 25, 1);
     sliderLines.style('width', '100px');
-    sliderFPS = createSlider(.5, 30, .5, .5);
+    sliderFPS = createSlider(.5, 30, 0  , .5);
     sliderFPS.style('width', '30px');
+
+    dropdownColours = createSelect();
+    dropdownColours.option('Rainbow');
+    dropdownColours.option('Random');
+    dropdownColours.option('Christmas');
+    dropdownColours.option('Australian');
     //#endregion
 }
 
@@ -29,7 +35,7 @@ function draw() {
     frameRate(sliderFPS.value());
     clear();
     background('black');
-    drawLines(sliderPasses.value(), sliderSegments.value(), rainbowColours, sliderThickness.value(), sliderAmplitude.value(),sliderLines.value());
+    drawLines(sliderPasses.value(), sliderSegments.value(), dropdownOptions(dropdownColours.value()), sliderThickness.value(), sliderAmplitude.value(),sliderLines.value());
 }
 
 
@@ -54,5 +60,18 @@ function drawLines(passes,segmentMax, colourPreset, thicknessModifer, amplitude,
             endShape();
             console.log('line');
         }
+    }
+}
+
+function dropdownOptions(dropdown){
+    switch(dropdown){
+        case 'Rainbow':
+            return rainbowColours;
+        case 'Random':
+            return randomColours;
+        case 'Christmas':
+            return christmasColours;
+        case 'Australian':
+            return australianColours;
     }
 }

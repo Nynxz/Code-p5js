@@ -8,10 +8,12 @@ function preload() {
     Cloud = new NodeCloud(8, 6, 0.8, 50);
     smallCloud = new NodeCloud(6, 3, 2, 25);
     GriffithLogo = loadImage('https://cdn.shortpixel.ai/client/q_lossy,ret_img,w_310/https://www.aeccglobal.my/wp-content/uploads/2020/05/griffith-logo.png');
+    p5Logo = loadImage('https://hello.p5js.org/assets/p5-sq-reverse.svg');
 }
 
 
 function setup() {
+    
     createCanvas(1000, 500);
     background(200);
     //frameRate(15);
@@ -42,8 +44,7 @@ function draw() {
     Cloud.drawNodes('LightCoral', 5);
     Cloud.moveNodes();
 
-    drawText();
-    GrowLogo();
+    GrowLogoAndText();
 
     //#region SLIDERS
     if (dropdownMode.value() == 'closest' && !DDmaxDisSpawned) {
@@ -58,19 +59,24 @@ function draw() {
 }
 
 let scaleIncr = 0;
-function drawText() {
-    fill('Red');
+
+function GrowLogoAndText(){
+    fill('rgba(25,25,25, 0.5)');
+    rect(0, 330, 620 * scaleIncr, 200);
     textStyle(BOLD);
+    fill('black');
+    textSize(64 * scaleIncr);
+    text('1701ICT', 8, 400);
+    text('CREATIVE CODING', 8, 464);
+
+    textStyle(NORMAL);
+    fill('Red');
     textSize(64 * scaleIncr);
     text('1701ICT', 10, 400);
     text('CREATIVE CODING', 10, 464);
-    textSize(18  * scaleIncr);
-    text('made using: p5js', 17, 494);
-}
-function GrowLogo(){
-    let scaleVal = lerp(0, 1, scaleIncr);
-    scale(scaleVal, scaleVal);
-    image(GriffithLogo, 680, 190);
+    image(GriffithLogo, width - (320*scaleIncr), 190);
+    scale(1/6,1/6);
+    image(p5Logo, -200 + (220 * scaleIncr), 468*6);
     scaleIncr < 1 ? scaleIncr+=.005 : 1;
 }
 
