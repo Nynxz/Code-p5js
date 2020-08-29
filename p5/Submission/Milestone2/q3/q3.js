@@ -1,8 +1,4 @@
 let canvasSize =  800;
-let trail;
-let sliderlength, sliderspeed;
-
-let debug = false;
 
 function setup() {
     createCanvas(canvasSize, canvasSize);
@@ -14,8 +10,8 @@ function setup() {
 
     sliderlength = createSlider(0, 200, 175, 1);
     sliderspeed = createSlider(0, 0.2, .02, .005);
-    sliderX = createSlider(1, 16, 2, 1);
-    sliderY = createSlider(1, 16, 6, 1);
+    sliderX = createSlider(1, 16, 1, 1);
+    sliderY = createSlider(1, 16, 3, 1);
 }
 
 function draw() {
@@ -44,35 +40,25 @@ function drawGrid(){
 
 class Trail {
     constructor(length, speed){
-        this.x;
-        this.y;
         this.length = length;
         this.speed = speed;
-
-        this.sinX = x;
-        this.cosY = y;
-
+        
         this.inc = 0;
         this.history = [];
     }
 
-    Next(){ 
-        this.x = sin(this.inc*this.sinX) * (canvasSize * .3846) + canvasSize/2
-        this.y = cos(this.inc*this.cosY) * (canvasSize * .3846) + canvasSize/2
-
-        if(debug){
-            console.log(this.x, this.y);
-            console.log(this.history.length);
-        }
-        
-        this.history.push({x: this.x, y:this.y});
-        this.inc += this.speed;
+    Next(){        
+        this.history.push({
+            x: sin(this.inc*this.sinX) * (canvasSize * .3846) + canvasSize/2, 
+            y: cos(this.inc*this.cosY) * (canvasSize * .3846) + canvasSize/2
+        });
 
         if(this.history.length > this.length){
             for(let i = this.history.length; i > this.length; i--){
                 this.history.shift();
             }
         }
+        this.inc += this.speed;
     }
 
     Draw(){
@@ -83,6 +69,7 @@ class Trail {
         }
     }
 
+    //FOR CHANGING SLIDERS.. clears trail on changes
     UpdateInfo(length, speed, sinX, cosY){
         this.length = length;
         this.speed = speed;

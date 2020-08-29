@@ -1,12 +1,15 @@
-let boxLength = 250 , boxAmountWidth = 2, boxAmountHeight = 3;   // <---- SCALE
+let boxLength = 500 , boxAmountWidth = 3, boxAmountHeight = 3;   // <---- SCALE
 
 const padding = boxLength / 10;
 const halfPadding = padding / 2;
+
 
 function setup() {
   createCanvas((boxLength + padding) * boxAmountWidth, (boxLength + padding) * boxAmountHeight);
   background("#585858");
   strokeCap(SQUARE);
+  
+
   for (x = 0; x < boxAmountWidth; x++) {
     for (y = 0; y < boxAmountHeight; y++) {
       assignmentDraw(x,y);
@@ -34,6 +37,7 @@ function assignmentDraw(x, y) {
     new Section(x, y, 'parallelogram', 'blue', 'yellow', 'red');  //6TH PART
   }
 }
+
 
 class Section {
   constructor(x, y, shape, shapeFillColour, verticalLineColour, horizontalLineColour) {

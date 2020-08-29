@@ -1,9 +1,3 @@
-let SomeTimeLater;
-let Cloud;
-let GriffithLogo;
-
-let dropdownMode;
-let maxDistselect;
 function preload() {
     Cloud = new NodeCloud(8, 6, 0.8, 50);
     smallCloud = new NodeCloud(6, 3, 2, 25);
@@ -11,12 +5,9 @@ function preload() {
     p5Logo = loadImage('https://hello.p5js.org/assets/p5-sq-reverse.svg');
 }
 
-
 function setup() {
-    
     createCanvas(1000, 500);
     background(200);
-    //frameRate(15);
     Cloud.generateNodes();
     smallCloud.generateNodes();
     //#region SLIDERS
@@ -25,7 +16,7 @@ function setup() {
     dropdownMode.option('closest');
     dropdownMode.option('segments');
 
-    maxDistselect = createSlider(0, 1000, 250, 1);
+    maxDistselect = createSlider(0, 1000, 175, 1);
     maxDistselect.hide();
     DDmaxDisSpawned = false;
     //#endregion
@@ -34,8 +25,6 @@ function setup() {
 function draw() {
     clear();
     background(200);
-    
-
     
     smallCloud.connectNodes('white', 0.5, dropdownMode.value(), maxDistselect.value() * 2);
     smallCloud.drawNodes('white', 1);
@@ -59,17 +48,10 @@ function draw() {
 }
 
 let scaleIncr = 0;
-
 function GrowLogoAndText(){
     fill('rgba(25,25,25, 0.5)');
     rect(0, 330, 620 * scaleIncr, 200);
     textStyle(BOLD);
-    fill('black');
-    textSize(64 * scaleIncr);
-    text('1701ICT', 8, 400);
-    text('CREATIVE CODING', 8, 464);
-
-    textStyle(NORMAL);
     fill('Red');
     textSize(64 * scaleIncr);
     text('1701ICT', 10, 400);
@@ -100,7 +82,7 @@ class NodeCloud {
                     node: new Node(
                         width / this.segmentCount * segments + (width / this.segmentCount / 2),
                         height / nodesInSegment * i + (height / nodesInSegment / 2),
-                        this.maxSpeed, //SPEEDMAX
+                        this.maxSpeed,
                         Math.random() * this.maxSize + 10)
                 });
             }
@@ -144,7 +126,6 @@ class NodeCloud {
     }
 
     moveNodes() {
-        //BALL COLLISION
         for (let i = 0; i < this.nodes.length; i++) {
             for(let j = 0; j < this.nodes.length; j++){
                 if(i != j && dist(this.nodes[i].node.x,this.nodes[i].node.y,this.nodes[j].node.x,this.nodes[j].node.y ) <= this.nodes[i].node.size/2 + this.nodes[j].node.size/2 ){
@@ -152,7 +133,6 @@ class NodeCloud {
                     this.nodes[i].node.motion.y *= -1;
                 }
             }
-            //STANDARD MOVE
             this.nodes[i].node.moveNode();
         }
     }
@@ -173,7 +153,7 @@ class Node {
         this.speed = speed;
         this.size = size;
 
-        this.motion = createVector((Math.random() * 2 -1) * speed, (Math.random() * 2 -1) * speed);
+        this.motion = createVector((Math.random() * 2 - 1) * speed, (Math.random() * 2 - 1) * speed);
     }
 
     moveNode() {

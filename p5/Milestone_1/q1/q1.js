@@ -1,26 +1,35 @@
-let numSquares, slider;
+// function setup() {
+//   let arrayCLEAN = [1,2,3,4,5];       //ARRAY U WANT TO RANDOMISE
+//   let arrayCHANGE = arrayCLEAN.slice();  //DUPLICATE OF ARRAY U WANT TO RANDOMISE SO YOU DONT BREAK STUFF
+//   let arrayNEW = new Array();                    //NEW ARRAY 
+ 
+//   for(i = 0; i < arrayCLEAN.length; i++){     //ITERATING THROUGH YOUR ARRAY
+//     let randomIndex = Math.floor(Math.random() * arrayCHANGE.length);     //GETTING A RANDOM INDEX FROM THE ARRAY                               
+//     arrayNEW.push(arrayCHANGE.splice(randomIndex, 1));                    //PUSHING THE RANDOMLY RETRIEVED INDEX, DELETING IT FROM CHANGE AND ADDING IT TO NEW
+//   }
+//   console.log(arrayNEW);
+// }
+
+
+// function setup() {
+//   const baseArr = [ [ 1, 2 ], [ 3, 4, 5 ], [ 6, 7 ], [ 8 ], [ 9 ] ]
+//   const desiredArr = [].concat.apply([], baseArr)
+//   console.log(baseArr);
+//   console.log(desiredArr);
+// }
 
 function setup() {
-
-    let hun = 100;
-    let top = 300;
-
-    for(let i = 0; i < 10; i++){
-      print(top - hun + (top-hun/10*i));
-    }
-  
-
-  slider = createSlider(0, 16, 5, 1);
-  slider.position(0, 250);
-  slider.style('width', '250px');
+  let oldArr = [1,2,3,4,5,6,7,8,9,10];
+  console.log(oldArr);
+  let randArr = ShuffleArray(oldArr);
+  console.log(randArr);
 }
 
-function draw() {
-    numSquares = slider.value();
-    createCanvas(numSquares * 100, 250);
-    background("#6569fb");
-    for(i = 0; i < numSquares; i++) {
-      fill(color(0, 225, 175, (255/numSquares * (i + 1))));
-      square(100 * i + 12.5, 87.5, 75, 15);
-    }
+function ShuffleArray(array){
+  let arr = array.slice();
+  let retArr = new Array();
+  for(i = 0; i < array.length; i++){
+      retArr.push(arr.splice(Math.floor(Math.random() * arr.length), 1)[0]);
+  }
+  return retArr;
 }
