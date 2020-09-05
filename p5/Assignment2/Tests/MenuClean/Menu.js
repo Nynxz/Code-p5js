@@ -14,12 +14,12 @@ function setup() {
     background(200);
 
     mainMenu = new Menu('mainMenu',
-        {name: 'Race', OnClick: ChangeDrawLayer.bind(null, raceMenu)},
+        {name: 'Race', OnClick: ChangeDrawLayer.bind(null, 'raceMenu')},
         {name:'Options',  OnClick: function(){
             console.log("Options");
         }},
-        {name:'Quit', onClick: function(){
-            //console.log("Quit");
+        {name:'Quit', OnClick: function(){
+            console.log("Quit");
         }});
     
         raceMenu = new Menu('raceMenu',
@@ -28,18 +28,18 @@ function setup() {
             }},
             {name: 'Map Select'},
             {name: 'Race!'},
-            {name: 'Return', OnClick: ChangeDrawLayer.bind(null, raceMenu)}
+            {name: 'Return', OnClick: ChangeDrawLayer.bind(null, 'mainMenu')}
         );
 
     //frameRate(5);
     ChangeDrawLayer(mainMenu);
-    console.log(drawLayer)
+    console.log('d layer ' ,drawLayer)
     console.log(mainMenu)
     console.log(raceMenu);
 }
 function draw(){
     drawLayer.draw();
-
+    // console.log(raceMenu);
 }
 
 function ShowButtons(group){
@@ -52,9 +52,11 @@ function ShowButtons(group){
 }
 
 function ChangeDrawLayer(group){
-    for(i = 0; i < group.buttons.length; i++){
-        group.buttons[i].makeButton(group.buttons.length, 100);
-        group.buttons[i].sprite.addToGroup(drawLayer);  //<--  INTO HERE     V
+    allSprites.clear();
+    drawLayer.clear();
+    for(i = 0; i < eval(group).buttons.length; i++){
+        eval(group).buttons[i].makeButton(eval(group).buttons.length, 100);
+        eval(group).buttons[i].sprite.addToGroup(drawLayer);  //<--  INTO HERE     V
     }
     ShowButtons(drawLayer);
 }
