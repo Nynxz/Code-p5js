@@ -2,6 +2,7 @@ let ButtonGroup, ButtonImage;
 let drawLayer;
 let groups;
 let mainMenu, raceMenu;
+let menuEnum = {mainMenu: 'mainMenu', raceMenu: 'raceMenu'}
 function preload(){
     
     drawLayer = new Group();
@@ -12,9 +13,9 @@ function preload(){
 function setup() {
     createCanvas(1000, 500);
     background(200);
-
+    
     mainMenu = new Menu('mainMenu',
-        {name: 'Race', OnClick: ChangeDrawLayer.bind(null, 'raceMenu')},
+        {name: 'Race', OnClick: ChangeDrawLayer.bind(null, menuEnum.raceMenu)},
         {name:'Options',  OnClick: function(){
             console.log("Options");
         }},
@@ -28,7 +29,7 @@ function setup() {
             }},
             {name: 'Map Select'},
             {name: 'Race!'},
-            {name: 'Return', OnClick: ChangeDrawLayer.bind(null, 'mainMenu')}
+            {name: 'Return', OnClick: ChangeDrawLayer.bind(null, menuEnum.mainMenu)}
         );
 
     //frameRate(5);
@@ -38,28 +39,15 @@ function setup() {
     console.log(raceMenu);
 }
 function draw(){
-    
-    // console.log(raceMenu);
-}
 
-function ShowButtons(group){
-    createCanvas(1000, 500);
-    background(200);
-    //group.draw();
-    for(sprite of group.toArray()){
-        sprite.Button.DrawSprite();
-        sprite.Button.DrawText();
-    }
 }
 
 function ChangeDrawLayer(group){
+    group = eval(group);
     allSprites.clear();
     drawLayer.clear();
-    for(i = 0; i < eval(group).buttons.length; i++){
-        eval(group).buttons[i].makeButton(eval(group).buttons.length, 100);
-        eval(group).buttons[i].sprite.addToGroup(drawLayer);  //<--  INTO HERE     V
-    }
-    ShowButtons(drawLayer);
+    group.DrawMenu(drawLayer);
+    
 }
 
 
@@ -70,10 +58,19 @@ class Menu{
         this.buttons = new Array(buttons.length);
         for(let i = 0; i < buttons.length; i++){
             this.buttons[i] = new Button(this.buttons.length, buttons[i].name, i, i, 100, group ,buttons[i].OnClick);
-            //this.buttons[i].makeButton(arguments.length, 100);  <- MOVED THIS OUT ^
         }
-
-    }    
+    }
+    
+    DrawMenu(){
+        createCanvas(1000, 500);
+        background(200);
+        for(let i = 0; i < this.buttons.length; i++){
+            this.buttons[i].makeButton();
+            this.buttons[i].sprite.addToGroup(drawLayer);
+            this.buttons[i].DrawSprite();
+            this.buttons[i].DrawText();
+        }
+    }
 }
 
 //Button Class
