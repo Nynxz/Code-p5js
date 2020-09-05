@@ -4,10 +4,6 @@ let groups;
 let mainMenu, raceMenu;
 function preload(){
     
-    groups = {
-        StartGroup: StartGroup = new Array(),
-        PreRaceGroup: PreRaceGroup = new Array()
-    };
     drawLayer = new Group();
     
     ButtonImage = loadImage('Button.png');
@@ -16,8 +12,8 @@ function preload(){
 function setup() {
     createCanvas(1000, 500);
     background(200);
-    //menu = new Menu('Start', 'Quit', 'Options', 'Test'); , onClick: Button.OnClick(this.name)
-    mainMenu = new Menu(StartGroup,
+
+    mainMenu = new Menu('mainMenu',
         {name: 'Race', OnClick: ChangeDrawLayer.bind(null, raceMenu)},
         {name:'Options',  OnClick: function(){
             console.log("Options");
@@ -26,86 +22,62 @@ function setup() {
             //console.log("Quit");
         }});
     
-        raceMenu = new Menu(PreRaceGroup,
+        raceMenu = new Menu('raceMenu',
             {name: 'Car Select', OnClick: function(){
                 console.log('Car Select');
             }},
             {name: 'Map Select'},
             {name: 'Race!'},
-            {name: 'Return', OnClick: ChangeDrawLayer.bind(null, mainMenu)}
+            {name: 'Return', OnClick: ChangeDrawLayer.bind(null, raceMenu)}
         );
+
     //frameRate(5);
-    console.log('sgroup:' , raceMenu);
-    ChangeDrawLayer(mainMenu)
+    ChangeDrawLayer(mainMenu);
+    console.log(drawLayer)
+    console.log(mainMenu)
+    console.log(raceMenu);
 }
-
-// function keyPressed() {
-//     if(keyCode == 27){
-//         console.log('ESC');
-//         ChangeDrawLayer(groups.StartGroup);
-//     }
-// }
-function ChangeDrawLayer(group){
-    console.log('CDL: ', group);
-    for(i = 0; i < group.buttons.length; i++){
-        console.log('re', group.buttons[i].sprite);
-        group.buttons[i].sprite.addToGroup(drawLayer);
-    }
-    // for(button in group){
-    //     console.log(button.sprite);
-    //     //button.sprite.addToGroup(drawLayer);
-    // }
-    console.log(group);
-    console.log('dlayer ', drawLayer);
-    ShowButtons(drawLayer);
-}
-
-function draw() {
+function draw(){
+    drawLayer.draw();
 
 }
-
-function StartGame() { 
-    //StartGroup = ClearButtons(StartGroup);
-    clear();
-    console.log("GAME HAS STARTED");
-    loop();
-}
-
 
 function ShowButtons(group){
     createCanvas(1000, 500);
     background(200);
-    group.draw();
-    //console.log(group.toArray())
+    //group.draw();
     for(sprite of group.toArray()){
-        //console.log(sprite.Button.name);
         sprite.Button.DrawText();
-        //console.log(sprite.Button.DrawText)
     }
-
 }
 
-function mouseClicked() {
-    console.log('CLICK');
+function ChangeDrawLayer(group){
+    for(i = 0; i < group.buttons.length; i++){
+        group.buttons[i].makeButton(group.buttons.length, 100);
+        group.buttons[i].sprite.addToGroup(drawLayer);  //<--  INTO HERE     V
+    }
+    ShowButtons(drawLayer);
 }
+
 
 
 class Menu{
-    constructor(group){
-        this.buttons = new Array(arguments.length-1);
-        for(let i = 1; i < arguments.length; i++){
-            this.buttons[i-1] = new Button(this.buttons.length, arguments[i].name, i-1, i-1, 100, group,arguments[i].OnClick);
-            this.buttons[i-1].makeButton(arguments.length, 100);
+    constructor(group, ...buttons){
+        this.group = group;
+        this.buttons = new Array(buttons.length);
+        for(let i = 0; i < buttons.length; i++){
+            this.buttons[i] = new Button(this.buttons.length, buttons[i].name, i, i, 100, group ,buttons[i].OnClick);
+            //this.buttons[i].makeButton(arguments.length, 100);  <- MOVED THIS OUT ^
         }
-        console.log(this.buttons);
 
     }    
 }
 
-
+//Button Class
 class Button{
     constructor(max, name, x, y, size, group, onClick, branches){
         this.name = name;
+        //Button x y to use in positioning, based on iterator when made in Menu
         this.x = x;
         this.y = y;
         this.size = size;
@@ -117,8 +89,8 @@ class Button{
         this.max = max;
     }
 
-//width / segmentMax * segment,
-    makeButton(max){
+    //Construct this button ?
+    makeButton(){
         fill('red');
         rectMode(CENTER);
         this.sprite = createSprite(
@@ -127,7 +99,7 @@ class Button{
             this.size*3,
             this.size);
         
-        //this.sprite.debug = true;
+        this.sprite.debug = true;
         this.sprite.Button = this;
         this.sprite.ButtonName = this.name;
         this.sprite.onMousePressed = this.onClick;
@@ -136,14 +108,16 @@ class Button{
 
     }
 
+    //Draw this buttons text
     DrawText(){
-        console.log('DRawing text');
+        //console.log('Drawing text');
         fill('black')
         textSize(32);
         textAlign(CENTER, CENTER);
         text(this.name, width/2,  (height- this.size/2) / this.max * (this.y+1) );
     }
 
+    //Draw this buttons sprite
     DrawSprite(){
         drawSprite(this.sprite);
     }

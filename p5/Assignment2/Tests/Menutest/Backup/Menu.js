@@ -61,7 +61,12 @@ function ChangeDrawLayer(group){
 }
 
 function draw() {
-
+    //console.log(allSprites);
+    //console.log(drawLayer);
+    //ShowButtons(drawLayer);
+    //ShowButtons(StartGroup);
+    //drawSprites();
+    //console.log(menu)
 }
 
 function StartGame() { 
@@ -71,6 +76,19 @@ function StartGame() {
     loop();
 }
 
+// function ClearButtons(group){
+    
+//     draw();
+//     let temp = group.slice(0, group.length);
+//     for(sprite of group){
+        
+//         sprite.mouseActive = false;
+//         sprite.remove();
+//     }
+//     //group.removeSprites();
+//     group = temp;
+//     console.log(groups);
+// }
 
 function ShowButtons(group){
     createCanvas(1000, 500);
@@ -87,14 +105,20 @@ function ShowButtons(group){
 
 function mouseClicked() {
     console.log('CLICK');
+    for(button in ButtonGroup){
+       // button.mouseUpdate();
+        if(button.mouseIsOver){
+            console.log("Mouse is over", button.ButtonName);
+        }
+    }
 }
 
 
 class Menu{
-    constructor(group){
+    constructor(){
         this.buttons = new Array(arguments.length-1);
         for(let i = 1; i < arguments.length; i++){
-            this.buttons[i-1] = new Button(this.buttons.length, arguments[i].name, i-1, i-1, 100, group,arguments[i].OnClick);
+            this.buttons[i-1] = new Button(this.buttons.length, arguments[i].name, i-1, i-1, 100, arguments[0] ,arguments[i].OnClick);
             this.buttons[i-1].makeButton(arguments.length, 100);
         }
         console.log(this.buttons);
@@ -121,8 +145,8 @@ class Button{
     makeButton(max){
         fill('red');
         rectMode(CENTER);
-        this.sprite = createSprite(
-            width/2,
+        this.sprite = createSprite(width/2 ,
+            //height/ max *( this.y+1) - (this.size/2 + this.size/8) ,
             (height - this.size/2) / this.max * (this.y+1),
             this.size*3,
             this.size);
@@ -133,6 +157,13 @@ class Button{
         this.sprite.onMousePressed = this.onClick;
         this.sprite.addImage(ButtonImage);
         this.sprite.scale = 1.5;
+        //this.sprite.addToGroup(this.group);
+        
+        // rect(width/2 ,
+        //     //height/ max *( this.y+1) - (this.size/2 + this.size/8) ,
+        //     (height- this.size/2) / max * (this.y+1) ,
+        //     this.size*2,
+        //     this.size);
 
     }
 
@@ -142,6 +173,7 @@ class Button{
         textSize(32);
         textAlign(CENTER, CENTER);
         text(this.name, width/2,  (height- this.size/2) / this.max * (this.y+1) );
+        //text(this.name, width/2,  (height - this.size/2) / );
     }
 
     DrawSprite(){
