@@ -38,7 +38,7 @@ function setup() {
     console.log(raceMenu);
 }
 function draw(){
-    drawLayer.draw();
+    
     // console.log(raceMenu);
 }
 
@@ -47,6 +47,7 @@ function ShowButtons(group){
     background(200);
     //group.draw();
     for(sprite of group.toArray()){
+        sprite.Button.DrawSprite();
         sprite.Button.DrawText();
     }
 }
@@ -107,7 +108,7 @@ class Button{
         this.sprite.onMousePressed = this.onClick;
         this.sprite.addImage(ButtonImage);
         this.sprite.scale = 1.5;
-
+        
     }
 
     //Draw this buttons text
