@@ -3,13 +3,14 @@ let drawLayer;
 let mainMenu, raceMenu, emptyCustomMenu;
 let menuEnum = {mainMenu: 'mainMenu', raceMenu: 'raceMenu', emptyCustomMenu: 'emptyCustomMenu'};
 let RacerPlayerOne;
-
+let redCarpng;
 function preload(){
     drawLayer = new Group();
     emptyCustomMenu = new Menu();
     ButtonImage = loadImage('Button.png');
     speedracerlogo = loadImage('speedracer.png');
     
+    redCarpng = loadImage('Assets/Car/redcar.png');
 }
 
 function setup() {
@@ -77,7 +78,6 @@ function DrawMenu(group){
     allSprites.clear();
     drawLayer.clear();
     group.DrawMenu(drawLayer);
-    
 }
 
 function ClearDrawLayer(){

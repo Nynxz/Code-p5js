@@ -4,6 +4,7 @@ function DisplayCarSelectMenu(){
 }
 
 function StartRace(){
-    ClearDrawLayer();
-    console.log(new Car(4,4,4,'Assets/Car/redcar.png'));
+    
+    let car = new Car(4,4,4, redCarpng);
+    car.drawCar();
 }

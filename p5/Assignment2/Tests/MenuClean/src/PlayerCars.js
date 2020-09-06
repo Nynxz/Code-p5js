@@ -1,7 +1,4 @@
-let CarEnum = {
-    Red: new Car(5,3,4, '/Assets/Car/redcar.png'),
-    Blue: new Car(3,4,5, '/Assets/Car/bluecar.png')
-};
+
 class Racer{
     constructor(car){
         this.car = car;
@@ -13,11 +10,22 @@ class Car{
         this.topSpeed = topSpeed;
         this.acceleration = acceleration;
         this.turning = turning;
-        this.image = loadImage(sprite, console.log("Loaded: ", sprite));
-        this.sprite; 
+        this.image = sprite;
+        this.sprite;
+        console.log('tes');
     }
 
     drawCar(){
-        this.sprite = createSprite();
+        ClearDrawLayer();
+        this.sprite = createSprite(width/2, height/2, 100, 100);
+        this.sprite.addImage(this.image);
+        console.log(this.sprite);
+        this.sprite.scale = 1.5;
+        this.sprite.debug = true;
+        this.sprite.addToGroup(drawLayer);
+        //drawSprites();
+        drawLayer.draw();
+        console.log('dlL: ', drawLayer);
+        console.log(this.sprite, this.image ,'te');
     }
 };
