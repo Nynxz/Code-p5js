@@ -70,6 +70,7 @@ function draw() {
 function loadTrack(track, scale){
   //Splitting
   track = track.map(e => e.split(''));
+  
   for(arr in track){
     for(row in arr){
       cWidth = track[arr].length > cWidth ? track[arr].length : cWidth;
@@ -177,7 +178,6 @@ function LoadImages(){
   road = loadImage('Assets/Ground/Road_Base.png');
   grass = loadImage('Assets/Ground/Grass_Base.png')
   finish = loadImage('Assets/Ground/Finish_Base.png');
-  
   starting = loadImage('Assets/Ground/Starting_Base.png');
 
   //Cars
