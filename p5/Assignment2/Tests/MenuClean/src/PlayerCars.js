@@ -25,12 +25,50 @@ function StartRace(){
     //resizeCanvas(map.getWidth() * SPRITEPIXELSIZE * 3, map.getHeight() * SPRITEPIXELSIZE * 3);
     canvas.position(0,0);
     mapg.drawMap();
+    car.resetCarStart(mapg.getStartpos());
     car.drawCar();
     //
     
 }
 
+function makeHUD(){
+    
 
+    hud = createGraphics(500, 600)
+    hud.background(100, 200);
+    hud.rectMode(CENTER);
+    hud.textSize(32);
+    hud.fill('black');
+    hud.text("Current Select Car:", 0, 32);
+    
+}
+function drawHUD(){
+    let carImage = car.image;
+    imageMode(CORNER);
+    image(hud, 100,100);
+
+    hud.image(carImage, 50,50, 200, 200);
+}
+
+function updateHUD(){
+
+}
+
+class HUD{
+    constuctor(width, height, posx, posy, colour, ...contents){
+        this.graphics = createGraphics(width, height);
+        this.graphics.background(colour);
+        this.posx = posx;
+        this.posy = posy;
+        this.contents = contents;
+        image(this.graphics,this.posx,this.posy);
+    }
+
+    drawHUD(){
+        
+    }
+
+}
 
 class Racer{
     constructor(car, map){
@@ -40,7 +78,7 @@ class Racer{
     }
 };
 class Car{
-    constructor(topSpeed, acceleration, turning, sprite, start){
+    constructor(topSpeed, acceleration, turning, sprite, scale, start ){
         this.topSpeed = topSpeed;
         this.acceleration = acceleration;
         this.turning = turning;
@@ -48,18 +86,25 @@ class Car{
         this.sprite;
         this.currentSpeed = 0;
         this.start = start;
+        this.scale = scale;
         //console.log('tes');
     }
 
+    resetCarStart(pos){
+        this.start = pos;
+    }
+
     drawCar(){
+        this.currentSpeed = 0;
         this.sprite = createSprite(this.start.x, this.start.y, 0, 0);
         this.sprite.rotation-=90;
         this.sprite.immovable = true;
         this.sprite.addImage(this.image);
+        this.sprite.scale = 2;
         console.log(this.sprite);
-        //this.sprite.scale = 1.5;
+        this.sprite.scale = this.scale;
         this.sprite.debug = true;
-        this.sprite.setCollider('circle', 0, 0, SPRITEPIXELSIZE/10)
+        this.sprite.setCollider('circle', 0, 0, this.scale * 5)
        // this.sprite.addToGroup(drawLayer);
         //drawLayer.draw();
     }
@@ -67,7 +112,10 @@ class Car{
     MoveCar(){        
         let speed = this.currentSpeed;
         if(this.sprite.overlap(hazards)){
-            speed *= 0.5;
+            this.sprite.limitSpeed(0);
+            this.currentSpeed = 0;
+            speed = 0;
+            StartRace();
           //StartRace(currentLoadedMap);
           console.log("collided with hazard");
         } 
@@ -139,6 +187,7 @@ class Map{
     setMap(txt){
         clear();
         hazards = new Group();
+        mapGroup = new Group();
         console.log('map2d')
         console.log(this.map2d);
         ClearDrawLayer();

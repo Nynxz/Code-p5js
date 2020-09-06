@@ -19,19 +19,28 @@ function preload(){
 function setup() {
     uiColour = color(255,0,0);
     canvas = createCanvas(2000,1000);
-
+    
     background(200);
     mapg = new Map();
     //DEFAULTS
 
-    mapg.setMap(weirdmap);
-    car = new Car(4,4,4, redCarpng, mapg.getStartpos());
+    mapg.setMap(daytonaMap);
+    
+    car = new Car(4,4,4, redCarpng, 1.3, mapg.getStartpos());
+
+    
 
     mainMenu = new Menu('mainMenu', uiColour,
         {name: 'Race', OnClick: function(){
             //ChangeDrawLayer.bind(null, menuEnum.raceMenu)
             DrawMenu(menuEnum.raceMenu);
+            car.resetCarStart(mapg.getStartpos());
             console.log("Test");   
+            //makeHUD();
+            //drawHUD();
+            
+            carStats = new HUD(500,600, 50,50, 'red');
+            carStats.drawHUD();
         }},
         {name:'Options',  OnClick: function(){
             console.log("Options");
@@ -43,30 +52,36 @@ function setup() {
     raceMenu = new Menu('raceMenu', uiColour,
         {name: 'Car Select', OnClick: function(){
             DisplayCarSelectMenu();
+
         }},
         {name: 'Map Select', OnClick: function(){
-            DisplayMapSelectMenu()
+            DisplayMapSelectMenu();
+
         }},
         {name: 'Race!', OnClick: function(){
             StartRace();
         }},
         {name: 'Return', OnClick: function(){
             //ChangeDrawLayer.bind(null, menuEnum.mainMenu)
-            print("FQQQ")
             DrawMenu(menuEnum.mainMenu);
-            drawLogo();
         }}
     );
     mapMenu = new Menu('mapMenu', uiColour,
-    {name: "Daytona", OnClick: function(){mapg.setMap(daytonaMap); DrawMenu(menuEnum.raceMenu);}},
-    {name: "Weird", OnClick: function(){mapg.setMap(weirdmap); DrawMenu(menuEnum.raceMenu);}},
+    {name: "Daytona", OnClick: function(){
+        mapg.setMap(daytonaMap);
+        DrawMenu(menuEnum.raceMenu);
+    }},
+    {name: "Weird", OnClick: function(){
+        mapg.setMap(weirdmap);
+        DrawMenu(menuEnum.raceMenu);
+    }},
     {name: 'Return', OnClick: function(){
         print("MAPMENU RETURN");
         DrawMenu(menuEnum.raceMenu);
     }});
     carMenu = new Menu('carMenu',mainMenu.colour,
     {name: 'Red Car', OnClick: function(){
-        car = new Car(7,4,3, redCarpng, mapg.getStartpos());
+        car = new Car(7,4,3, redCarpng, 1.3, mapg.getStartpos());
         mainMenu.ChangeColour('red');
         carMenu.ChangeColour('red');
         raceMenu.ChangeColour('red');
@@ -74,7 +89,7 @@ function setup() {
         carMenu.DrawMenu();
     }},
     {name: 'Blue Car', OnClick: function(){
-        car = new Car(6,5,4, blueCarpng, mapg.getStartpos());
+        car = new Car(6,5,4, blueCarpng,  1.2, mapg.getStartpos());
         mainMenu.ChangeColour('lightblue');
         carMenu.ChangeColour('lightblue');
         raceMenu.ChangeColour('lightblue');
@@ -82,7 +97,7 @@ function setup() {
         carMenu.DrawMenu();
     }},
     {name: 'Yellow Car', OnClick: function(){
-        car = new Car(3,4,6, yellowCarpng, mapg.getStartpos());
+        car = new Car(3,4,6, yellowCarpng, 1, mapg.getStartpos());
         mainMenu.ChangeColour('yellow');
         carMenu.ChangeColour('yellow');
         raceMenu.ChangeColour('yellow');
@@ -104,11 +119,14 @@ function setup() {
 
 function draw(){
     if(ingame){
+        
         //clear();
         mapg.drawMap();
         drawSprites();
         car.MoveCar();
+
     }
+
 }
 
 function keyPressed() {
@@ -138,6 +156,7 @@ function DrawMenu(group){
     allSprites.clear();
     drawLayer.clear();
     group.DrawMenu(drawLayer);
+
 }
 
 function ClearDrawLayer(){
