@@ -1,0 +1,16 @@
+NAME : a9small
+COMMENT : test problem
+TYPE : TSP
+DIMENSION: 9
+EDGE_WEIGHT_TYPE : EUC_2D
+NODE_COORD_SECTION
+  1 0 0
+  2 100 100
+  3 0 100
+  4 100 0
+  5 50 0
+  6 0 50
+  7 50 100
+  8 100 50
+  9 50 50
+EOF

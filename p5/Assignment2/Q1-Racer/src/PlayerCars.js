@@ -229,3 +229,8 @@ class Map{
         };
     }
 }
+
+/*
+let rawmap = loadStrings('track.txt');   
+
+*/

@@ -28,7 +28,6 @@ function setup() {
     
     car = new Car(4,4,4, redCarpng, 1.3, mapg.getStartpos());
 
-    
 
     mainMenu = new Menu('mainMenu', uiColour,
         {name: 'Race', OnClick: function(){

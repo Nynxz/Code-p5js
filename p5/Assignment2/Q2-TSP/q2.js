@@ -1,12 +1,25 @@
-let testTSP
+let loadedTSP;
+let scalex, scaley;
+let PADDING = 75;
 function preload() {
-    testTSP = new loadTSP('pr76');
+    //a280 berlin52 ch150
+    loadedTSP = new loadTSP('ch150');
+        
+
 }
 
 function setup(){
     startCanvas(1000, 1000);
-    console.log(testTSP);
-    showLoadedTSP(testTSP);
+    console.log(loadedTSP);
+    showLoadedTSP(loadedTSP);
+    //a280new berlin52new ch150new
+    console.log(showSolutionTSP('ch150'));
+    rectMode(CORNER);
+    testErr();
+}
+
+function DisplayTSP(){
+
 }
 
 function draw(){
@@ -25,7 +38,7 @@ function loadTSP(filename){
         function(){
             console.log("LOADING TSP FILE : " + filename) 
             
-            //NAME - WORKING
+            //NAME
             TSPobj.name = rawTSP[0].slice(rawTSP[0].search(/(?<=NAME ?: ).*/), rawTSP[0].length);
             //TOTAL NUMBER OF CITIES
             TSPobj.dimension = rawTSP[3].slice(rawTSP[3].search(/(?<=DIMENSION ?: ).*/), rawTSP[3].length);
@@ -65,7 +78,7 @@ function loadTSP(filename){
 }
 
 function showLoadedTSP(TSP){
-    let PADDING = 15;
+
 
     // let scalexmax = dist(width, 0, TSP.minmax.xmax, 0);
     // let scaleymax = dist(0, height, 0, TSP.minmax.ymax);
@@ -75,8 +88,10 @@ function showLoadedTSP(TSP){
 
     // let scalm = (scalex + scaley)/2
     
-    let scalex = (width-PADDING*2)/TSP.minmax.xmax;
-    let scaley = (height-PADDING*2)/TSP.minmax.ymax;
+    scalex = (width-PADDING*2)/TSP.minmax.xmax;
+    scaley = (height-PADDING*2)/TSP.minmax.ymax;
+    
+    //let circlescale = (scalex+scaley)/2
     //console.log(scale);
 
     //#region DEBUG
@@ -95,11 +110,82 @@ function showLoadedTSP(TSP){
     for(coords of TSP.coordinates){
         //console.log("X: " + (coords.x+PADDING) + " Y: " + (coords.y+PADDING));
         circle(
-            ((coords.x) * scalex) + PADDING/2, 
-            ((coords.y) * scaley) + PADDING/2,
-            15); //SIZE
+            ((coords.x) * scalex) + PADDING, 
+            ((coords.y) * scaley) + PADDING,
+            10); //SIZE
     }
+
+    textSize(25)
+    text("Travelling Salesperson", 5, 25);
+    text(("Problem Name: " + TSP.name), 35 , 50);
+    text(("Locations: " + TSP.dimension), 350 , 50);
+    text(("X - min: " + TSP.minmax.xmin.toFixed(2) + " max: " + TSP.minmax.xmax.toFixed(2)), 555, 25);
+    text(("Y - min: " + TSP.minmax.ymin.toFixed(2) + " max: " + TSP.minmax.ymax.toFixed(2)), 555, 55);
     console.log(TSP);
 }
 
 
+// function loadSolution(solutionfile){
+
+// }
+
+
+function showSolutionTSP(solutionfile){
+    let solObj = new Object();
+    console.log("Showing Solution: " + solutionfile);
+    let rawSol = loadStrings('TSP_EUC_SOLUTIONS/' + solutionfile + '.solu', function(){
+        console.log(rawSol);
+        solObj.name = rawSol[0];
+        solObj.distance = rawSol[1];
+        if(solObj.name == loadedTSP.name){
+            solObj.IDs = new Array();
+            for(i = 0; i < loadedTSP.dimension;i++){
+                solObj.IDs.push(rawSol[2+i]);
+            }
+            
+            for(i = 0; i < loadedTSP.dimension-1;i++){
+                console.log(i + " " + solObj.IDs[i]);
+                line((loadedTSP.coordinates[solObj.IDs[i]-1].x * scalex) + PADDING,
+                    (loadedTSP.coordinates[solObj.IDs[i]-1].y * scaley) + PADDING,
+                    (loadedTSP.coordinates[solObj.IDs[i+1]-1].x * scalex) + PADDING,
+                    (loadedTSP.coordinates[solObj.IDs[i+1]-1].y * scaley) + PADDING
+                );
+            }
+            line((loadedTSP.coordinates[solObj.IDs[0]-1].x * scalex) + PADDING,
+                (loadedTSP.coordinates[solObj.IDs[0]-1].y * scaley) + PADDING,
+                (loadedTSP.coordinates[solObj.IDs[loadedTSP.dimension-1]-1].x * scalex) + PADDING,
+                (loadedTSP.coordinates[solObj.IDs[loadedTSP.dimension-1]-1].y * scaley) + PADDING
+                );
+        }
+
+    },
+    function(){ //ON FAIL
+        console.warn("FILE (" + filename + ".solu) NOT DETECTED IN showSolutionTSP()")
+    });
+    console.log(solObj);
+    
+    //return solObj;
+}
+
+function testErr(){
+    let errsol = loadStrings('TSP_EUC_SOLUTIONS/OLD/a280.sol');
+    console.log(errsol);
+}
+
+/*
+
+Object{
+    Name: name,
+    Dimension: dimension,
+    Coords: [
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+    ]
+}
+
+
+*/
