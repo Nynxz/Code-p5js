@@ -1,11 +1,12 @@
 let loadedTSP;
 let scalex, scaley;
 let PADDING = 75;
-let problem  = 'berlin52';
+let problem  = 'a280';
+let loadedsol;
 function preload() {
     //a280 berlin52 ch150
     loadedTSP = new loadTSP(problem);
-        
+    monomanimg = loadImage('assets/monoman.png');
 
 }
 
@@ -14,9 +15,13 @@ function setup(){
     console.log(loadedTSP);
     showLoadedTSP(loadedTSP);
     //a280new berlin52new ch150new
-    console.log(showSolutionTSP(problem));
-    rectMode(CORNER);
+    console.log("loadedsol");
+    console.log(loadedsol);
+    loadedsol = showSolutionTSP(problem);
+    rectMode(CENTER);
     testErr();
+    imageMode(CENTER);
+    image(monomanimg, loadedTSP.coordinates[loadedsol.IDs[i-1]-1].x,loadedTSP.coordinates[loadedsol.IDs[i-1]-1].y , 64, 64);
 }
 
 function DisplayTSP(){
@@ -34,6 +39,7 @@ function startCanvas(x, y){
 }
 
 function loadTSP(filename){
+    
     let TSPobj = new Object();
     let rawTSP = loadStrings('TSP_EUC_PROBLEMS/' + filename + '.tsp',
         function(){
@@ -61,65 +67,46 @@ function loadTSP(filename){
             TSPobj.minmax.ymax = TSPobj.coordinates.reduce((temp, coord) => Math.max(temp, coord.y), 0);
             TSPobj.minmax.xmin = TSPobj.coordinates.reduce((temp, coord) => Math.min(temp, coord.x), TSPobj.coordinates[0].x);
             TSPobj.minmax.ymin = TSPobj.coordinates.reduce((temp, coord) => Math.min(temp, coord.y), TSPobj.coordinates[0].y);
-
-            // for(coords of TSPobj.coordinates){
-            //     console.log("Loop ", coords.x, " ",coords.y)
-            //     TSPobj.minmax.xmax = TSPobj.minmax.xmax >= coords.x ? TSPobj.minmax.xmax : coords.x;
-            //     TSPobj.minmax.ymax = TSPobj.minmax.ymax >= coords.y ? TSPobj.minmax.ymax : coords.y;
-            //     TSPobj.minmax.xmin = TSPobj.minmax.xmin <= coords.x ? TSPobj.minmax.xmin : coords.x;
-            //     TSPobj.minmax.ymin = TSPobj.minmax.ymin <= coords.y ? TSPobj.minmax.ymin : coords.y;
-            // }
-
         },
         function(){ //ON FAIL
             console.warn("FILE (" + filename + ".tsp) NOT DETECTED IN loadTSP()")
         });
     
-    return TSPobj;
+        return TSPobj;
+
 }
 
 function showLoadedTSP(TSP){
+    stroke(0,0,0,75);
 
-
-    // let scalexmax = dist(width, 0, TSP.minmax.xmax, 0);
-    // let scaleymax = dist(0, height, 0, TSP.minmax.ymax);
-
-    // let scalex = dist(0,0,TSP.minmax.xmin,0);
-    // let scaley = dist(0,0,0,TSP.minmax.ymin);
-
-    // let scalm = (scalex + scaley)/2
-    
     scalex = (width-PADDING*2)/TSP.minmax.xmax;
     scaley = (height-PADDING*2)/TSP.minmax.ymax;
-    
-    //let circlescale = (scalex+scaley)/2
-    //console.log(scale);
 
     //#region DEBUG
     beginShape(LINES);
-    vertex(PADDING, PADDING);
-    vertex(width - PADDING, PADDING);
-    vertex(width - PADDING, PADDING);
-    vertex(width - PADDING, height - PADDING);
-    vertex(width - PADDING, height - PADDING);
-    vertex(PADDING, height - PADDING);
-    vertex(PADDING, height - PADDING);
-    vertex(PADDING, PADDING);
+    vertex(PADDING          , PADDING);
+    vertex(width - PADDING  , PADDING);
+    vertex(width - PADDING  , PADDING);
+    vertex(width - PADDING  , height - PADDING);
+    vertex(width - PADDING  , height - PADDING);
+    vertex(PADDING          , height - PADDING);
+    vertex(PADDING          , height - PADDING);
+    vertex(PADDING          , PADDING);
     endShape();
     //#endregion
 
     for(coords of TSP.coordinates){
-        //console.log("X: " + (coords.x+PADDING) + " Y: " + (coords.y+PADDING));
         circle(
             ((coords.x) * scalex) + PADDING, 
             ((coords.y) * scaley) + PADDING,
-            10); //SIZE
+            10);
     }
 
     textSize(25)
     text("Travelling Salesperson", 5, 25);
     text(("Problem Name: " + TSP.name), 35 , 50);
     text(("Locations: " + TSP.dimension), 350 , 50);
+    
     text(("X - min: " + TSP.minmax.xmin.toFixed(2) + " max: " + TSP.minmax.xmax.toFixed(2)), 555, 25);
     text(("Y - min: " + TSP.minmax.ymin.toFixed(2) + " max: " + TSP.minmax.ymax.toFixed(2)), 555, 55);
     console.log(TSP);
@@ -134,6 +121,7 @@ function showLoadedTSP(TSP){
 function showSolutionTSP(solutionfile){
     let solObj = new Object();
     console.log("Showing Solution: " + solutionfile);
+    
     let rawSol = loadStrings('TSP_EUC_SOLUTIONS/' + solutionfile + '.solu', function(){
         console.log(rawSol);
         solObj.name = rawSol[0];
@@ -157,6 +145,8 @@ function showSolutionTSP(solutionfile){
                 (loadedTSP.coordinates[solObj.IDs[loadedTSP.dimension-1]-1].x * scalex) + PADDING,
                 (loadedTSP.coordinates[solObj.IDs[loadedTSP.dimension-1]-1].y * scaley) + PADDING
                 );
+            text(("Distance: " + solObj.distance), 350 , 25);
+
         }
 
     },
@@ -165,7 +155,7 @@ function showSolutionTSP(solutionfile){
     });
     console.log(solObj);
     
-    //return solObj;
+    return solObj;
 }
 
 function testErr(){
