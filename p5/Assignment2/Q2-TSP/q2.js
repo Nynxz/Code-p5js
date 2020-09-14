@@ -1,9 +1,10 @@
 let loadedTSP;
 let scalex, scaley;
 let PADDING = 75;
+let problem  = 'berlin52';
 function preload() {
     //a280 berlin52 ch150
-    loadedTSP = new loadTSP('ch150');
+    loadedTSP = new loadTSP(problem);
         
 
 }
@@ -13,7 +14,7 @@ function setup(){
     console.log(loadedTSP);
     showLoadedTSP(loadedTSP);
     //a280new berlin52new ch150new
-    console.log(showSolutionTSP('ch150'));
+    console.log(showSolutionTSP(problem));
     rectMode(CORNER);
     testErr();
 }
