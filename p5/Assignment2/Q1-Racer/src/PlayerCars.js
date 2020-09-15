@@ -1,4 +1,4 @@
-const SPRITEPIXELSIZE = 32;
+const SPRITEPIXELSIZE = 64;
 
 function DisplayCarSelectMenu(){
     console.log('Car Select');
@@ -14,17 +14,18 @@ function DisplayMapSelectMenu(){
 
 let car, map, player;
 function StartRace(){
+    resizeCanvas(mapg.getWidth() * SPRITEPIXELSIZE*2, mapg.getHeight() * SPRITEPIXELSIZE*2);
     ClearDrawLayer();
     
-    clear();
+    //clear();
     ingame = true;
     
     
     print(mapg.getWidth() + " " + mapg.getHeight() + "map hw");
     player = new Racer(car, map);
-    //resizeCanvas(map.getWidth() * SPRITEPIXELSIZE * 3, map.getHeight() * SPRITEPIXELSIZE * 3);
+    
     canvas.position(0,0);
-    mapg.drawMap();
+    //mapg.drawMap();
     car.resetCarStart(mapg.getStartpos());
     car.drawCar();
     //
@@ -176,8 +177,9 @@ class Map{
         mapGroup = new Group();
         for(let arr of this.map2d){
             for(let tile of arr){
+                tile.sprite.visible = true;
                 tile.sprite.addToGroup(mapGroup);
-                tile.sprite.draw();
+                //tile.sprite.draw();
                 //console.log(tile.sprite);
             }
         }
@@ -205,7 +207,7 @@ class Map{
             ((col) * SPRITEPIXELSIZE*2)  + (SPRITEPIXELSIZE),
             SPRITEPIXELSIZE,SPRITEPIXELSIZE);
         //newSprite.debug = true;
-        
+            newSprite.visible = false;
         switch(type){
             case "0":
                 newSprite.addImage(grass);

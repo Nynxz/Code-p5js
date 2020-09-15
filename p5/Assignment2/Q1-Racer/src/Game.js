@@ -117,11 +117,18 @@ function setup() {
 
 function draw(){
     if(ingame){
+        //console.log("Re")
         mapg.drawMap();
         drawSprites();
         car.MoveCar();
+        DEBUGmousepos();
     }
 
+}
+
+function DEBUGmousepos(){
+    textAlign(CENTER, CENTER);
+    text("X: " + mouseX + " Y: "+ mouseY, mouseX+500, mouseY-100);
 }
 
 function keyPressed() {
