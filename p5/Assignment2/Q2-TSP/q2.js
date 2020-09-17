@@ -1,5 +1,5 @@
 let loadedTSP, loadedSOL;
-let problem  = 'berlin52';
+let problem  = 'a280';
 
 let scalex, scaley;
 let PADDING = 75;
