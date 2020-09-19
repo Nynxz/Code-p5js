@@ -2,12 +2,12 @@ let STRETCHPROBLEM = true;
 
 let loadedTSP, loadedSOL;
 //a280 berlin52 ch150
-let problem  = 'a10testbig';
+let problem  = 'a280';
 
 let scalex, scaley;
 let PADDING = 75;
 
-let moveSpeed = 0.1;
+
 let loadedBOOL = false;
 
 let monoMan;
@@ -20,12 +20,7 @@ function dropdown(){
     strechcheckbox.changed(function(){
         monomantrail = new Array();
         STRETCHPROBLEM = this.checked() ? true : false});
-    
-    speedSlider = createSlider(0, 1, 0.1, 0.005);
-    speedSlider.changed(function(){
-        moveSpeed = speedSlider.value();
-    })
-}
+    }
 }
 function inputChange(input){
     removeSprite(monoMan);
@@ -42,7 +37,7 @@ function preload() {
 }
 
 function setup(){
-    frameRate(60);
+    frameRate(15);
     noLoop();
     dropdown();
     startTSP(problem);
@@ -50,7 +45,7 @@ function setup(){
     loadedBOOL = false;
     //RAWTSP > Object > Display()
 }
-let incrementor = 0, lerpStep = 0;
+let incrementor = 0;
 function draw(){
     //console.log("DRAW LOOP");
     if(keyIsPressed){
@@ -62,16 +57,12 @@ function draw(){
         showSolutionTSP(loadedSOL, loadedTSP);
         //console.log(incrementor);
         if(incrementor < loadedTSP.dimension-1){
-            if(lerpStep >= 1){
-                lerpStep = 0;
-                incrementor++
-            }
+            incrementor++
         } else {
             incrementor = 0;
             monomantrail = new Array();
         }
-        lerpStep += moveSpeed;
-        moveMan(incrementor, lerpStep);
+        //moveMan(incrementor);
         drawSprites();
         
     }
@@ -120,31 +111,20 @@ function loadMonoMan(){
 }
 //TODO p5.vector.lerp  TODODODODO
 let monomantrail = new Array();
-function moveMan(i, lerpStep){
+function moveMan(i){
         stroke(0,0,0,255);
         let xpos = loadedTSP.coordinates[loadedSOL.IDs[i]-1].x * loadedTSP.scalex + PADDING
         let ypos = loadedTSP.coordinates[loadedSOL.IDs[i]-1].y * loadedTSP.scaley + PADDING
-        let toPos = createVector(xpos, ypos);
-
-        let monoPos = createVector(monoMan.position.x, monoMan.position.y);
-            monoManToPos = p5.Vector.lerp(monoPos, toPos, lerpStep);
-            //console.log(monoManToPos);
-            monoMan.position.x = monoManToPos.x;
-            monoMan.position.y = monoManToPos.y;
-        // monoMan.position.x = monoManToPos.x
-        // monoMan.position.y = ypos
-        monomantrail.push({x: monoManToPos.x, y: monoManToPos.y}) ;
+        
+        monoMan.position.x = xpos
+        monoMan.position.y = ypos
+        monomantrail.push({x: xpos, y: ypos}) ;
         //console.log(monomantrail);
         if(monomantrail.length > 2){
         for(t = 1; t < monomantrail.length-1;t++){
-            line(monomantrail[t].x, monomantrail[t].y, monomantrail[t+1].x, monomantrail[t+1].y)
+            line(monomantrail[t].x, monomantrail[t].y, monomantrail[t-1].x, monomantrail[t-1].y)
         }
-        
     }
-}
-
-function lerpMonoMan(lerpStep){
-
 }
 
 

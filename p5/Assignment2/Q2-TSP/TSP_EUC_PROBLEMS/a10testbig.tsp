@@ -1,4 +1,4 @@
-NAME : a9big
+NAME : a10testbig
 COMMENT : test problem
 TYPE : TSP
 DIMENSION: 9

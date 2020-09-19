@@ -105,6 +105,8 @@ class Car{
         this.sprite.scale = this.scale;
         //this.sprite.debug = true;
         this.sprite.setCollider('circle', 0, 0, this.scale * 7.5);
+        this.sprite.mass = 10;
+        this.sprite.friction = 0.1;
        // this.sprite.addToGroup(drawLayer);
         //drawLayer.draw();
     }
@@ -139,7 +141,7 @@ class Car{
        if(keyIsDown(87)){//W
         this.currentSpeed = constrain(speed+(this.acceleration/100),-1,this.topSpeed);
        } else {
-        this.currentSpeed = constrain(speed-((this.acceleration/100)/2),0,this.topSpeed);
+        this.currentSpeed = constrain(speed-((this.acceleration/100)),0,this.topSpeed);
        }
        if(keyIsDown(83)){//S
         this.currentSpeed = constrain(speed-(this.acceleration/100),-1,this.topSpeed);
@@ -204,6 +206,8 @@ class Map{
                     tile.sprite.barrel.addToGroup(barrelEGroup);
                 } 
                 if(tile.type == "M"){
+                    tile.sprite.barrel.friction = .5;
+                    tile.sprite.barrel.mass = 5000;
                     tile.sprite.barrel.addImage(barrelmove);
                     tile.sprite.barrel.addToGroup(barrelMGroup);
                 } 
