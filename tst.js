@@ -13,3 +13,11 @@ function setup() {
       }
       return retArr;
   }
+
+  function showAdd(num, times){
+      console.log(num++);
+      num < times ? showAdd(num++, times) : console.log("end");
+  }
+
+
+  

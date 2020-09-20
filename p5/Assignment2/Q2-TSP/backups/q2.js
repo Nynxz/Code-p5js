@@ -11,41 +11,31 @@ let loadedBOOL = false;
 let monoMan;
 let probleminput;
 let monoManTrail;
-let drawMonoManBOOL = true;
 function dropdown(){
     if(probleminput === undefined){
     probleminput = createInput(problem);
     probleminput.input(inputChange);
-    drawmonomancheckbox = createCheckbox('Draw Monopoly Man', drawMonoManBOOL);
-    drawmonomancheckbox.changed(function() {
-        drawMonoManBOOL = this.checked() ? true : false;
-    });
     animatecheckbox = createCheckbox('Animate', true);
     animatecheckbox.changed(function(){
-        if(this.checked() == true){
-            drawmonomancheckbox.show();
-        } else {
-            drawmonomancheckbox.hide();
-        }
         loadedBOOL = this.checked() ? true : false;
-        if(loadedBOOL){
-           
-        }
     });
     strechcheckbox = createCheckbox('Strech', STRETCHPROBLEM);
-    if(animatecheckbox.value = true){
-        
-    }
-    
     strechcheckbox.changed(function(){
         lerpI = 0;
         targetI = 1;
         monoManTrail = new Array();
         STRETCHPROBLEM = this.checked() ? true : false});
+    
+    // speedSlider = createSlider(0, 1, 0.15, 0.005);
+    // speedSlider.changed(function(){
+    //     moveSpeed = speedSlider.value();
+    // })
 }
 }
-function inputChange(){
+function inputChange(input){
     removeSprite(monoMan);
+    
+
     clear();
     problem = this.value();
     loadedSOL = new Object();
@@ -74,11 +64,10 @@ function draw(){
         background(100);
         showLoadedTSP(loadedTSP);
         showSolutionTSP(loadedSOL, loadedTSP);
-        newMoveMan();
-        if(drawMonoManBOOL){
-            drawSprites();
-        }
+        newMoveMan(0.005);
+        drawSprites();
     }
+    
 }
 function startTSP(problem){
     loadStrings('TSP_EUC_PROBLEMS/' + problem + '.tsp',
@@ -95,6 +84,7 @@ function startTSP(problem){
                 function(){ //FAILURE - This is where I would run a solver function.
                     console.warn("UNABLE TO FIND SOLUTION FILE");
                     loop();
+                    //loadedBOOL=true;
                 }
             );
         },
@@ -108,6 +98,7 @@ function startTSP(problem){
 function startCanvas(x, y){
     createCanvas(x, y);
     background(100);
+
     imageMode(CENTER)
 }
 
@@ -120,7 +111,8 @@ function loadMonoMan(){
     return monoMan;
 }
 
-function newMoveMan(){
+function newMoveMan(speed){
+//monoMan = sprite
 
     if(typeof monoManTrail == 'undefined' || monoManTrail.length == loadedSOL.IDs.length){
         monoManTrail = new Array();
@@ -132,10 +124,11 @@ function newMoveMan(){
         targetI = 1;
     }
 
-    targetVector = createVector(
-        /* xpos*/ loadedTSP.coordinates[loadedSOL.IDs[targetI]-1].x * loadedTSP.scalex + PADDING,
-        /* ypos*/ loadedTSP.coordinates[loadedSOL.IDs[targetI]-1].y * loadedTSP.scaley + PADDING);
-
+    //ALREADY AT THE FIRST... first TARGET = SECOND ID in Solution
+        targetVector = createVector(
+            /* xpos*/ loadedTSP.coordinates[loadedSOL.IDs[targetI]-1].x * loadedTSP.scalex + PADDING,
+            /* ypos*/ loadedTSP.coordinates[loadedSOL.IDs[targetI]-1].y * loadedTSP.scaley + PADDING);
+    
 
     if(typeof monomanVector == 'undefined'){
         monomanVector = createVector(monoMan.position.x, monoMan.position.y);
@@ -152,7 +145,7 @@ function newMoveMan(){
         monoManTrail.push(monomanVector);
         console.log("At location");
     } else {
-        lerpI+= 0.005/5;
+        lerpI+= speed/5;
     }
 
     monomanVector = p5.Vector.lerp(monomanVector, targetVector, lerpI);
@@ -170,6 +163,40 @@ function newMoveMan(){
     }
 }
 
+
+
+
+function moveMan(i, lerpStep){
+        stroke(0,0,0,255);
+        console.log(i + " " + lerpStep);
+
+        let xpos = loadedTSP.coordinates[loadedSOL.IDs[i-1]-1].x * loadedTSP.scalex + PADDING
+        let ypos = loadedTSP.coordinates[loadedSOL.IDs[i-1]-1].y * loadedTSP.scaley + PADDING
+        let toPos = createVector(xpos, ypos);
+
+        let monoPos = createVector(monoMan.position.x, monoMan.position.y);
+        monoManToPos = p5.Vector.lerp(monoPos, toPos, lerpStep);
+      
+        //console.log(monoManToPos);
+        monoMan.position.x = monoManToPos.x;
+        monoMan.position.y = monoManToPos.y;
+        // monoMan.position.x = monoManToPos.x
+        // monoMan.position.y = ypos
+        if(lerpStep > .9){
+            monomantrail.push({x: monoManToPos.x, y: monoManToPos.y}) ;
+        }
+        //console.log(monomantrail);
+        if(monomantrail.length > 3){
+        for(t = 0; t < monomantrail.length-1;t++){
+            line(monomantrail[t].x, monomantrail[t].y, monomantrail[t-1].x, monomantrail[t-1].y)
+        }
+        
+    }
+}
+
+function lerpMonoMan(lerpStep){
+
+}
 function loadTSP(rawTSP){
     let TSPobj = new Object({
         name: null,
@@ -210,6 +237,7 @@ function showLoadedTSP(TSP){
             TSP.scaley = TSP.scalemin;
         }
  
+    //#region DEBUG
     beginShape(LINES);
     vertex(PADDING          , PADDING);
     vertex(width - PADDING  , PADDING);
@@ -220,6 +248,7 @@ function showLoadedTSP(TSP){
     vertex(PADDING          , height - PADDING);
     vertex(PADDING          , PADDING);
     endShape();
+    //#endregion
 
     for(coords of TSP.coordinates){
         circle(
@@ -261,9 +290,11 @@ function loadSolutionTSP(rawSol){
 }
 
 function showSolutionTSP(solObj, loadedTSP){
-
+    // console.log("Showing Solution: ");
+    // console.log(solObj)
     if(solObj.IDs){
         for(i = 0; i < solObj.IDs.length-1;i++){
+            //console.log(i + " " + solObj.IDs[i]);
             line((loadedTSP.coordinates[solObj.IDs[i]-1].x * loadedTSP.scalex) + PADDING,
                 (loadedTSP.coordinates[solObj.IDs[i]-1].y * loadedTSP.scaley) + PADDING,
                 (loadedTSP.coordinates[solObj.IDs[i+1]-1].x * loadedTSP.scalex) + PADDING,
@@ -281,3 +312,26 @@ function showSolutionTSP(solObj, loadedTSP){
     }
     
 }
+
+function testErr(){
+    let errsol = loadStrings('TSP_EUC_SOLUTIONS/OLD/a280.sol');
+    console.log(errsol);
+}
+
+/*
+
+Object{
+    Name: name,
+    Dimension: dimension,
+    Coords: [
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+        {x: xpos, y: ypos},
+    ]
+}
+
+
+*/
