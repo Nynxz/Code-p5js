@@ -24,36 +24,30 @@ function setup() {
     mapg = new Map();
     car = new Car(7, 4, 3, redCarpng, 1, mapg.getStartpos());
     mainMenu = new Menu('mainMenu', uiColour,
-        {
-            name: 'Race', OnClick: function () {
+        {name: 'Race', OnClick: function () {
                 DrawMenu(menuEnum.raceMenu);
                 console.log("Race Menu");
             }
         },
-        {
-            name: 'Options', OnClick: function () {
+        {name: 'Options', OnClick: function () {
                 console.log("Options");
             }
         },
-        {
-            name: 'Quit', OnClick: function () {
+        {name: 'Quit', OnClick: function () {
                 console.log("Quit");
             }
         });
 
     raceMenu = new Menu('raceMenu', uiColour,
-        {
-            name: 'Car Select', OnClick: function () {
+        {name: 'Car Select', OnClick: function () {
                 DisplayCarSelectMenu();
             }
         },
-        {
-            name: 'Map Select', OnClick: function () {
+        {name: 'Map Select', OnClick: function () {
                 DisplayMapSelectMenu();
             }
         },
-        {
-            name: 'Race!', OnClick: function () {
+        {name: 'Race!', OnClick: function () {
                 if (mapg.getStartpos() == undefined) {
                     mapg.setMap(weirdmap);
                 }
@@ -61,44 +55,38 @@ function setup() {
                 StartRace();
             }
         },
-        {
-            name: 'Return', OnClick: function () {
+        {name: 'Return', OnClick: function () {
                 DrawMenu(menuEnum.mainMenu);
             }
         });
 
     mapMenu = new Menu('mapMenu', uiColour,
-        {
-            name: "Daytona", OnClick: function () {
+        {name: "Daytona", OnClick: function () {
                 mapg.setMap(daytonaMap);
                 car.resetCarStart(mapg.getStartpos());
                 DrawMenu(menuEnum.raceMenu);
             }
         },
-        {
-            name: "Weird", OnClick: function () {
+        {name: "Weird", OnClick: function () {
                 mapg.setMap(weirdmap);
                 car.resetCarStart(mapg.getStartpos());
                 DrawMenu(menuEnum.raceMenu);
             }
         },
-        {
-            name: "Playground", OnClick: function () {
+        {name: "Playground", OnClick: function () {
                 mapg.setMap(playground);
                 car.resetCarStart(mapg.getStartpos());
                 DrawMenu(menuEnum.raceMenu);
             }
         },
-        {
-            name: 'Return', OnClick: function () {
+        {name: 'Return', OnClick: function () {
                 print("MAPMENU RETURN");
                 DrawMenu(menuEnum.raceMenu);
             }
         });
 
     carMenu = new Menu('carMenu', mainMenu.colour,
-        {
-            name: 'Red Car', OnClick: function () {
+        {name: 'Red Car', OnClick: function () {
                 car = new Car(5, 4, 3, redCarpng, 1, mapg.getStartpos());
                 mainMenu.ChangeColour('red');
                 carMenu.ChangeColour('red');
@@ -107,8 +95,7 @@ function setup() {
                 carMenu.DrawMenu();
             }
         },
-        {
-            name: 'Blue Car', OnClick: function () {
+        {name: 'Blue Car', OnClick: function () {
                 car = new Car(4, 5, 4, blueCarpng, .9, mapg.getStartpos());
                 mainMenu.ChangeColour('lightblue');
                 carMenu.ChangeColour('lightblue');
@@ -117,8 +104,7 @@ function setup() {
                 carMenu.DrawMenu();
             }
         },
-        {
-            name: 'Yellow Car', OnClick: function () {
+        {name: 'Yellow Car', OnClick: function () {
                 car = new Car(3, 4, 6, yellowCarpng, .8, mapg.getStartpos());
                 mainMenu.ChangeColour('yellow');
                 carMenu.ChangeColour('yellow');
@@ -127,8 +113,7 @@ function setup() {
                 carMenu.DrawMenu();
             }
         },
-        {
-            name: 'Return', OnClick: function () {
+        {name: 'Return', OnClick: function () {
                 print("CARMENU RETURN");
                 DrawMenu(menuEnum.raceMenu);
             }

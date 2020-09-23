@@ -1,49 +1,78 @@
+//STARTING PROBLEM  //a280 berlin52 ch150
+let problem  = 'a280';
+
 let STRETCHPROBLEM = true;
 let loadedTSP, loadedSOL;
-//a280 berlin52 ch150
-let problem  = 'a280';
+
 let scalex, scaley;
 let PADDING = 75;
 
-let moveSpeed = 0.1;
-let loadedBOOL = false;
-
-let monoMan;
 let probleminput;
-let monoManTrail;
 let drawMonoManBOOL = true;
-function dropdown(){
-    if(probleminput === undefined){
-    probleminput = createInput(problem);
-    probleminput.input(inputChange);
-    drawmonomancheckbox = createCheckbox('Draw Monopoly Man', drawMonoManBOOL);
-    drawmonomancheckbox.changed(function() {
-        drawMonoManBOOL = this.checked() ? true : false;
-    });
-    animatecheckbox = createCheckbox('Animate', true);
-    animatecheckbox.changed(function(){
-        if(this.checked() == true){
-            drawmonomancheckbox.show();
-        } else {
-            drawmonomancheckbox.hide();
+let showSol = true;
+
+function preload() {
+    monomanimg = loadImage('assets/monoman.png');
+}
+
+function setup(){
+    startCanvas(1000, 1000);
+    startTSP(problem);
+    loadedBOOL = false;
+}
+
+function draw(){
+    if(loadedBOOL){
+        background(100);
+        showLoadedTSP(loadedTSP);
+        if(showSol) showSolutionTSP(loadedSOL, loadedTSP);
+        newMoveMan(0.05);
+        if(drawMonoManBOOL){
+            drawSprites();
         }
-        loadedBOOL = this.checked() ? true : false;
-        if(loadedBOOL){
-           
-        }
-    });
-    strechcheckbox = createCheckbox('Strech', STRETCHPROBLEM);
-    if(animatecheckbox.value = true){
-        
     }
-    
-    strechcheckbox.changed(function(){
-        lerpI = 0;
-        targetI = 1;
-        monoManTrail = new Array();
-        STRETCHPROBLEM = this.checked() ? true : false});
 }
+
+function startCanvas(x, y){
+    createCanvas(x, y);
+    background(100);
+    imageMode(CENTER)
+    frameRate(60);
+    options();
 }
+
+function options() {
+    if (probleminput === undefined) {
+        probleminput = createInput(problem);
+        probleminput.input(inputChange);
+        drawmonomancheckbox = createCheckbox('Draw Monopoly Man', drawMonoManBOOL);
+        drawmonomancheckbox.changed(function () {
+            drawMonoManBOOL = this.checked() ? true : false;
+        });
+        animatecheckbox = createCheckbox('Animate', true);
+        animatecheckbox.changed(function () {
+            if (this.checked() == true) {
+                drawmonomancheckbox.show();
+            } else {
+                drawmonomancheckbox.hide();
+            }
+            loadedBOOL = this.checked() ? true : false;
+        });
+        strechcheckbox = createCheckbox('Strech', STRETCHPROBLEM);
+        strechcheckbox.changed(function () {
+            lerpI = 0;
+            targetI = 1;
+            monoManTrail = new Array();
+            STRETCHPROBLEM = this.checked() ? true : false
+        });
+        solCheckbox = createCheckbox('Show Solution', showSol);
+        solCheckbox.changed(function () {
+            clear();
+            showSol = this.checked() ? true : false
+        });
+    }
+}
+
 function inputChange(){
     removeSprite(monoMan);
     clear();
@@ -55,31 +84,6 @@ function inputChange(){
     targetI = 1;
 }
 
-function preload() {
-    monomanimg = loadImage('assets/monoman.png');
-}
-
-function setup(){
-    frameRate(60);
-    noLoop();
-    dropdown();
-    startTSP(problem);
-    startCanvas(1000, 1000);
-    loadedBOOL = false;
-    //RAWTSP > Object > Display()
-}
-
-function draw(){
-    if(loadedBOOL){
-        background(100);
-        showLoadedTSP(loadedTSP);
-        showSolutionTSP(loadedSOL, loadedTSP);
-        newMoveMan();
-        if(drawMonoManBOOL){
-            drawSprites();
-        }
-    }
-}
 function startTSP(problem){
     loadStrings('TSP_EUC_PROBLEMS/' + problem + '.tsp',
         function(raw){  //SUCCESS - TSP LOADED
@@ -104,13 +108,6 @@ function startTSP(problem){
     );
 }
 
-
-function startCanvas(x, y){
-    createCanvas(x, y);
-    background(100);
-    imageMode(CENTER)
-}
-
 function loadMonoMan(){
     monoMan = createSprite(loadedTSP.coordinates[loadedSOL.IDs[0]-1].x * loadedTSP.scalex + PADDING, 
         loadedTSP.coordinates[loadedSOL.IDs[0]-1].y * loadedTSP.scaley + PADDING);
@@ -120,9 +117,9 @@ function loadMonoMan(){
     return monoMan;
 }
 
-function newMoveMan(){
+function newMoveMan(speed){
 
-    if(typeof monoManTrail == 'undefined' || monoManTrail.length == loadedSOL.IDs.length){
+    if(typeof monoManTrail == 'undefined' || targetI > loadedTSP.dimension - 1){
         monoManTrail = new Array();
     }
     if(typeof lerpI == 'undefined'){
@@ -131,6 +128,10 @@ function newMoveMan(){
     if(typeof targetI == 'undefined'){
         targetI = 1;
     }
+
+    previousVector = createVector(
+        /* xpos*/ loadedTSP.coordinates[loadedSOL.IDs[targetI-1]-1].x * loadedTSP.scalex + PADDING,
+        /* ypos*/ loadedTSP.coordinates[loadedSOL.IDs[targetI-1]-1].y * loadedTSP.scaley + PADDING);
 
     targetVector = createVector(
         /* xpos*/ loadedTSP.coordinates[loadedSOL.IDs[targetI]-1].x * loadedTSP.scalex + PADDING,
@@ -142,30 +143,33 @@ function newMoveMan(){
         monoManTrail.push(monomanVector);
     }
 
-    
-    if(lerpI >= .1){
-        lerpI = 0;
-        if(targetI == loadedSOL.IDs.length-1){
-            targetI = -1;
-        }
-        targetI++;
-        monoManTrail.push(monomanVector);
-        console.log("At location");
-    } else {
-        lerpI+= 0.005/5;
-    }
-
-    monomanVector = p5.Vector.lerp(monomanVector, targetVector, lerpI);
-
+    monomanVector = p5.Vector.lerp(previousVector, targetVector, lerpI);
     monoMan.position.x = monomanVector.x;
     monoMan.position.y = monomanVector.y;
+    
+    stroke(0, 0, 0, 255);
+    if (lerpI >= 1) {
+        lerpI = 0;
+        if (targetI < loadedTSP.dimension - 1) {
+            targetI++;
+            monoManTrail.push(monomanVector)
+        } else {
+            monoManTrail = new Array();
+            targetI = 1;
+            monoManTrail.push(createVector( //FIX FOR RESTART TRAIL
+                loadedTSP.coordinates[loadedSOL.IDs[0] - 1].x * loadedTSP.scalex + PADDING,
+                loadedTSP.coordinates[loadedSOL.IDs[0] - 1].y * loadedTSP.scaley + PADDING));
+        }
+    } else {
+        lerpI += speed;
+    }
 
-   stroke(0,0,0,255);
-   
-    if(monoManTrail.length >=  1){
-        line(monoManTrail[monoManTrail.length-1].x,monoManTrail[monoManTrail.length-1].y, monoMan.position.x,monoMan.position.y)
-        for(i = 0; i < monoManTrail.length-1;i++){
-            line(monoManTrail[i].x,monoManTrail[i].y, monoManTrail[i+1].x,monoManTrail[i+1].y);
+    if(monoManTrail.length){
+        //TRAIL LINE
+        line(previousVector.x, previousVector.y , monoMan.position.x,monoMan.position.y)
+        //ARRAY LINES
+        for(i = 1; i < monoManTrail.length;i++){
+            line(monoManTrail[i].x,monoManTrail[i].y, monoManTrail[i-1].x,monoManTrail[i-1].y);
         }
     }
 }
@@ -225,7 +229,7 @@ function showLoadedTSP(TSP){
         circle(
             ((coords.x) * TSP.scalex) + PADDING, 
             ((coords.y) * TSP.scaley) + PADDING,
-            10);
+            8);
         
     }
 
