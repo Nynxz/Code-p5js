@@ -2,7 +2,7 @@ class Enemy{
     constructor(img, size){
         this.img = img;
         this.size = size;
-        this.health = (size*10) * 1.2;
+        this.health = 1000;
         this.maxHealth = this.health;
         this.sprite = null;
         this.createEnemy(mouseX, mouseY);
@@ -19,14 +19,24 @@ class Enemy{
         
         this.sprite.debug = true;
         enemies.add(this.sprite)
+        this.sprite.self = this;
         this.sprite.addImage(this.img);
         this.sprite.setCollider("circle",0,0,this.sprite.scale*10);
         this.sprite.draw();
         this.sprite.OBJ = this;
         this.sprite.maxSpeed = map(this.size, 1, 64, 25, 2, true);
         this.sprite.rotateToDirection = true;
-        this.attractTo();
+        //this.attractTo();
         console.log("Spawned: size:" + this.size);
+    }
+
+    damage(bullet){
+        console.log(bullet.damageAmount);
+        this.health -= bullet.damageAmount;
+        if(this.health <= 0){
+            console.log("DEAD");
+            this.sprite.life = 1;
+        }
     }
 
     healthbar(){
@@ -47,10 +57,5 @@ class Enemy{
         }
     }
 
-    shoot(){}
-
-    spawnEnemy(){
-        
-    }
     
 }

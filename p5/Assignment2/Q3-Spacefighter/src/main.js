@@ -82,6 +82,7 @@ function gameLogic(){
         break;
 
         case states.PLAYING:
+            
             background(125);
             loadScreen.startBar(1, () => {
                 console.log("DONE LOADING PLAYING")});
@@ -92,8 +93,8 @@ function gameLogic(){
                     console.log(allSprites.length);
                 }
 
-                
-                bullets.overlap(enemies, (bullet, enemy) => {dealDamage(bullet, enemy)})
+                bullets.collide(enemies, (bullet,enemy) => {console.log(enemy); bullet.damage(bullet, enemy.self);});
+                //bullets.overlap(enemies, (bullet, enemy) => {dealDamage(bullet, enemy)})
                 bullets.map((bullet, i) => {
                     if(bullet.position.y < 0 || bullet.position.x < 0 || bullet.position.y > settingsjson.globalSettings.canvasWidth){
                         bullet.remove();
@@ -134,31 +135,12 @@ function gameLogic(){
             sidebar = image(sidebarimg,settingsjson.globalSettings.canvasWidth - 1,0, settingsjson.globalSettings.sidebarWidth, settingsjson.globalSettings.canvasHeighteight+1000)
             //sidebar = rect(settingsjson.globalSettings.canvasWidth - 1, 0, settingsjson.globalSettings.sidebarWidth, settingsjson.globalSettings.canvasHeight);
             sidebarObj.displayPoints();
+
         break;
         case states.LEADERBOARD:
 
         break;
     }
-}
-
-function dealDamage(bullet, enemy){
-    enemy.OBJ.health -= bullet.damage;
-    console.log(enemy.OBJ.health);
-    
-    if(enemy.OBJ.health <= 1){
-        player.currentPoints += enemy.OBJ.maxHealth;
-        enemy.remove();
-    }
-    if(bullet.type != 'lazer'){
-        bullet.remove();
-    }
-    
-    // enemy.remove();
-    // bullet.remove();
-}
-
-function checkCollisions(){
-   
 }
 
 function createMAINMENU(){
@@ -168,11 +150,9 @@ function createMAINMENU(){
         name: 'Play', OnClick: function () {
             allSprites.clear();
             //TODO
-            //TODO REFACTORING THIS (this works);
-            // player = new Player(shipimg);
-            // player.setWeapons(1, weaponsjson.Type.Basic.StandardShot);
-            // player.setWeapons(2, weaponsjson.Type.Lazer.RedBeam);
-            // player.placePlayer(width/2 - (settingsjson.globalSettings.sidebarWidth/2), height/2)
+            createNewDebugPlayer();
+            
+            player.placePlayer(width/2 - (settingsjson.globalSettings.sidebarWidth/2), height/2)
             currentState = states.PLAYING;
             console.log("PLAY!");
         }},

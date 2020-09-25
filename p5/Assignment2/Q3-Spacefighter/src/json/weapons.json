@@ -2,9 +2,10 @@
     "Type": {
         "Basic": {
             "StandardShot":{
-                "damage": 10,
+                "_name": "Standard Shot",
+                "damage": 100,
                 "range": 100,
-                "cooldown": 2,
+                "cooldown": 15,
                 "force": 10,
                 "img": "/p5/Assignment2/Q3-Spacefighter/Assets/bullets/standardshot.png"
             }
