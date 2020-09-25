@@ -1,0 +1,8 @@
+{
+    "globalSettings": {
+        "FPS": 60,
+        "canvasHeight": 1000,
+        "canvasWidth" : 1000,
+        "sidebarWidth": 300
+    }
+}
