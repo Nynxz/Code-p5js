@@ -22,6 +22,13 @@ function preload(){
 
 }
 let DEBUGspawner;
+
+const CustomEventTypes = {
+    ASSETS_LOADED: 'q3-assets-loaded'
+}
+
+
+
 function setup(){
     bullets = new Group();
     enemybullets = new Group();
@@ -42,7 +49,9 @@ function setup(){
     inDebug ? debugMenu() : 0;
     backgroundMake();
 
-    Pickup.InitTypes();
+    // Pickup.InitTypes();
+
+    window.dispatchEvent(new Event(CustomEventTypes.ASSETS_LOADED))
 }
 
 

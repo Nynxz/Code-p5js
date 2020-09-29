@@ -31,6 +31,8 @@ const initPickupTypes = () => {
   };
 }
 
+window.addEventListener('q3-assets-loaded', initPickupTypes)
+
 class Pickup {
       constructor(type, pos){
       /**
