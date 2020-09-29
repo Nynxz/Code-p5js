@@ -1,46 +1,41 @@
 //STATUS - MEDIUM
 
 let enemyArr = [];
+
 function cleanEnemyArr(){
     enemyArr = enemyArr.filter(enemy => enemy.ship.sprite.life > 0);
-    //enemyArr.map(enemy => console.log(enemy.ship.sprite.life));
 }
+
 function enemyArrShootAll(){
-    //if(frameCount % 60 == 0) console.log(enemyArr);
     enemyArr.map(enemy => {
-        //console.log(enemy.ship.info.weapons)
-        enemy.ship.info.weapons[0].pointAt(createVector(player.ship.sprite.position.x,player.ship.sprite.position.y)) ;enemy.shootAtPlayer()});
+        enemy.ship.info.weapons[0].pointAt(createVector(player.ship.sprite.position.x,player.ship.sprite.position.y)) ; enemy.shootAtPlayer()});
 }
 
 class Enemy{
-    
-    /* WORKING
-        constructor(img, size , health, x , y, weapon){
-        this.img = img;
-        this.size = size;
-        this.health = size*12;
-        this.maxHealth = this.health;
-        this.sprite = null;
-        this.weapon = weapon;
-        this.createEnemy(x, y);
-        }
-        */
-    
-    
-    
-    
+
+
     constructor(ship, size, points, x, y){
         this.ship = ship;
         this.size = size;
         this.points = points; 
-        //console.log(this);
         this.createEnemy(x, y);
         enemyArr.push(this);
     }
 
     shootAtPlayer(){
-        if(this.ship.sprite.position.y > 0 && frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && random(0,1) < .1){
-            new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
+        if(this.ship.sprite.position.y > 0 && this.ship.sprite.position.y < player.ship.sprite.position.y && frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && random(0,1) < .1){
+            
+            if(this.ship.info.weapons[0].weapontype == WeaponTypes.Straight)
+                new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
+
+            else if(this.ship.info.weapons[0].weapontype == WeaponTypes.spread360){
+                for(let i = 0; i < 18; i++){
+                    let bullet = new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
+                    bullet.sprite.setSpeed(2, ((i+1) * 20));
+                    bullet.sprite.life = 1000;
+                    bullet.sprite.scale = 1
+                }
+            }
         }
     }
 

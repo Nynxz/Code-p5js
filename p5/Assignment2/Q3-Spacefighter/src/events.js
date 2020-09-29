@@ -17,7 +17,7 @@ class enemySpawner{
     }
 
     spawnEnemy(count, randomCount){
-        if(frameCount % 320 == 0){
+        if(frameCount % 320 == 0 && enemies.length < 5){
             for(let i = 0; i < count; i++){
                 let type = random(0,1);
                 let enemy;
@@ -27,12 +27,13 @@ class enemySpawner{
                 {
                     enemy = createDebugShip();
                 }
+                console.log("SPAWNING");
                 new Enemy(enemy, Math.floor(random(84, 256)), 2000, random(30, settingsjson.globalSettings.canvasWidth - 30), random(-500, -50));
             }
         }
         if(frameCount % 600 == 0){
             let rand = random(0,1);
-            rand > .8 ? startShopEventDEBUG() : 0;
+            rand > .9 ? startShopEventDEBUG() : 0;
         }
     }
 }
@@ -74,6 +75,7 @@ class SpaceEvent{
                 for(let j = 0; j < height; j+=100){
                     let notif = createSprite((i+1) * 25, j + (50));
                     notif.addAnimation('spin', this.anim);
+                    notif.addToGroup(events);
                     notif.life = this.maxDuration;
                 }
             }
@@ -82,6 +84,7 @@ class SpaceEvent{
                 for(let j = 0; j < height; j+=100){
                     let notif = createSprite(settingsjson.globalSettings.canvasWidth - ((i+1) * 25), j + 50);
                     notif.addAnimation('spin', this.anim);
+                    notif.addToGroup(events);
                     notif.life = this.maxDuration;
                 }
 

@@ -42,8 +42,10 @@ class Player{
         this.currentMoney = 0;
         this.ship.sprite = (this.turnIntoSprite(this.ship.img));
         this.ship.sprite.image = this.ship.img;
+        this.ship.sprite.immovable = true;
         this.ship.sprite.self = this;
         this.ship.sprite.debug = inDebug;
+        this.ship.sprite.shield = new Array();
         delete this.ship.img;
         this.info = new Object();
         this.info.redHitScreen = 0;
@@ -82,7 +84,7 @@ class Player{
     }
 
     damage(bullet){
-        //sconsole.log(bullet.damageAmount);
+
         this.dealDamage(bullet.damageAmount);
         
     }

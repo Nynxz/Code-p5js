@@ -166,6 +166,6 @@ function startHazardEventDEBUG(){
     console.log("Starting Hazard!");
 }
 function startShopEventDEBUG(){
-    new SpaceEvent(SpaceEvents.Shop, 1000, 5);
+    new SpaceEvent(SpaceEvents.Shop, 500, 5);
     console.log("Starting Shop!");
 }

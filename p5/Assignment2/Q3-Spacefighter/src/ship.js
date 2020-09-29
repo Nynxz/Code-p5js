@@ -20,8 +20,10 @@ class Ship{
     }
 }
 
+let WeaponTypes = {Straight : 0, spread360 : 1};
+
 class WeaponPoint{
-    constructor(vecOffset, vecDirection, bulletType){
+    constructor(vecOffset, vecDirection, bulletType, weapontype){
         this.vecOffset = new p5.Vector(0,0);
         this.vecOffset.x = vecOffset.x;
         this.vecOffset.y = vecOffset.y;
@@ -36,6 +38,8 @@ class WeaponPoint{
         this.bullet = new Object();
         this.bullet.type = bulletType;
         //debugWarn(this);
+
+        this.weapontype = weapontype;
 
         return this;
     }

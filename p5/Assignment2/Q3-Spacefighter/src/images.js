@@ -28,6 +28,15 @@ function preloadIMAGES(inputJson){
     
     hitmarkeranim = loadAnimation('/p5/Assignment2/Q3-Spacefighter/Assets/Animations/Explosions/hitmarker/hitmarker01.png', '/p5/Assignment2/Q3-Spacefighter/Assets/Animations/Explosions/hitmarker/hitmarker02.png', '/p5/Assignment2/Q3-Spacefighter/Assets/Animations/Explosions/hitmarker/hitmarker03.png', '/p5/Assignment2/Q3-Spacefighter/Assets/Animations/Explosions/hitmarker/hitmarker04.png')
     hitmarkeranim.looping = false;
+
+
+    //SHIELD HIT
+    shieldhittop = loadAnimation('/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/tophit01.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/tophit02.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/tophit03.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/tophit04.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/tophit05.png');
+    shieldhitbottom = loadAnimation('/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/bottomhit01.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/bottomhit02.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/bottomhit03.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/bottomhit04.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/bottomhit05.png')
+    shieldhitleft = loadAnimation('/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/lefthit01.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/lefthit02.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/lefthit03.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/lefthit04.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/lefthit05.png')
+    shieldhitright = loadAnimation('/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/righthit01.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/righthit02.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/righthit03.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/righthit04.png','/p5/Assignment2/Q3-Spacefighter/Assets/ShieldHit/righthit05.png')
+
+
     //basicgreenexplosion.looping = false;
 }
 

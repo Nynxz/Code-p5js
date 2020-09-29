@@ -1,56 +1,49 @@
-let stars = new Array();
+class Background{
+    static stars = new Array();
 
-function backgroundMake(){
-    for(let i = 0; i < 400; i++){
-        console.log("YES");
-        stars.push(new Star());
+    static makeBackground(amount){
+        for(let i = 0; i < amount; i++){
+            this.stars.push(new Star());
+        }
     }
-    rectMode(CENTER);
-}
-function backgroundDraw(){
 
-
-    background("#000000");
-    //console.log("YES");
-
-    stars.forEach(e => {
-        e.drawStar();
-        //e.moveStar();
-    });
+    static backgroundDraw(){
+        background("#000000");
+        this.stars.forEach(star => {
+            star.draw();
+        });
+    }
 }
 
 class Star{
     constructor(){
         this.size;
         this.speed;
-        this.pos = new Object();
-        this.pos.x;
-        this.pos.y;
-        this.makeStar();
+        this.pos = new p5.Vector();
+
         this.brightness = 0;
         this.blinkincr = 0;
+        this.make();
     }
 
-    makeStar(){
-        this.pos.x = random(1, width);
-        this.pos.y = random(-500, 0);
+    make(){
+        this.pos = {x: random(1, width), y: random(-500, 0)};
         this.size = random(1, 6)
         this.blinkincr = random(0, TWO_PI);
     }
 
-    drawStar(){
+    draw(){
         this.brightness = sin(this.blinkincr);
         fill(map(this.brightness, -1, 1, 0, 255));
         circle(this.pos.x, this.pos.y, this.size);
-        this.moveStar();
+        this.move();
     }
 
-    moveStar(){
-        this.blinkincr = this.blinkincr < TWO_PI ? this.blinkincr+=TWO_PI/255*this.size : this.blinkincr = 0;
+    move(){
+        this.blinkincr = this.blinkincr < TWO_PI ? this.blinkincr+=TWO_PI/255*this.size/2 : this.blinkincr = 0;
         this.pos.y += this.size/2;
         if(this.pos.y > height){
-            //console.log("DELETING");
-            this.makeStar()
+            this.make() //RESET
         }
     }
 }

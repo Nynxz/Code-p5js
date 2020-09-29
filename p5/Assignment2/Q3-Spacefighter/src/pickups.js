@@ -31,6 +31,7 @@ class Pickup{
         this.sprite.scale = 2;
         this.sprite.addToGroup(pickups);
         this.sprite.self = this;
+        this.sprite.velocity.y = 1;
     }
 
     effect(sprite, amount){

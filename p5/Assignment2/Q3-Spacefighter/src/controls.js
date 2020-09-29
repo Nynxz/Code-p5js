@@ -1,19 +1,18 @@
 //STATUS - GOOD
 
 class Controls {
-    constructor(){
-        this.vector = new p5.Vector();
-        this.shoot1 = 0;
-        this.shoot2 = 0;
-    }
 
-    zero(){
+    static vector = new p5.Vector();
+    static shoot1 = 0;
+    static shoot2 = 0;
+    
+
+    static zero(){
         this.vector.x = 0;
         this.vector.y = 0;
-
     }
 
-    refresh(){
+    static refresh(){
         this.vector.x = 0;
         this.vector.y = 0;
 
@@ -34,9 +33,7 @@ class Controls {
         this.shoot2 = keyIsDown(69) ? 1 : 0;
         
         if(playerDEBUG && frameCount % 30 == 0){
-
             console.log(this.vector);
         }
-
     }
 }
