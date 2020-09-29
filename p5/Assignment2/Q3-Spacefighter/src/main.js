@@ -55,7 +55,7 @@ function setup(){
 }
 
 
-function mouseClicked(){A
+function mouseClicked(){
    // console.log(allSprites);
 
     //DEBUG ENEMY SPAWN ON CLICK
