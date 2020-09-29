@@ -1,50 +1,111 @@
+//STATUS - MEDIUM
+
+let enemyArr = [];
+function cleanEnemyArr(){
+    enemyArr = enemyArr.filter(enemy => enemy.ship.sprite.life > 0);
+    //enemyArr.map(enemy => console.log(enemy.ship.sprite.life));
+}
+function enemyArrShootAll(){
+    //if(frameCount % 60 == 0) console.log(enemyArr);
+    enemyArr.map(enemy => {
+        //console.log(enemy.ship.info.weapons)
+        enemy.ship.info.weapons[0].pointAt(createVector(player.ship.sprite.position.x,player.ship.sprite.position.y)) ;enemy.shootAtPlayer()});
+}
+
 class Enemy{
-    constructor(img, size){
+    
+    /* WORKING
+        constructor(img, size , health, x , y, weapon){
         this.img = img;
         this.size = size;
-        this.health = 1000;
+        this.health = size*12;
         this.maxHealth = this.health;
         this.sprite = null;
-        this.createEnemy(mouseX, mouseY);
+        this.weapon = weapon;
+        this.createEnemy(x, y);
+        }
+        */
+    
+    
+    
+    
+    constructor(ship, size, points, x, y){
+        this.ship = ship;
+        this.size = size;
+        this.points = points; 
+        //console.log(this);
+        this.createEnemy(x, y);
+        enemyArr.push(this);
+    }
+
+    shootAtPlayer(){
+        if(this.ship.sprite.position.y > 0 && frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && random(0,1) < .1){
+            new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
+        }
     }
 
     createEnemy(x, y){
-        this.sprite = createSprite(x, y);
-        
-        this.sprite.velocity.y = 1;
-        this.sprite.life = 5000;
+        this.ship.sprite = createSprite(x, y);
+        this.ship.sprite.velocity.y = 1;
+        this.ship.sprite.life = 5000;
         
         //console.log(this.sprite);
-        this.sprite.scale = this.size/100;
         
-        this.sprite.debug = true;
-        enemies.add(this.sprite)
-        this.sprite.self = this;
-        this.sprite.addImage(this.img);
-        this.sprite.setCollider("circle",0,0,this.sprite.scale*10);
-        this.sprite.draw();
-        this.sprite.OBJ = this;
-        this.sprite.maxSpeed = map(this.size, 1, 64, 25, 2, true);
-        this.sprite.rotateToDirection = true;
+        
+        //this.ship.sprite.debug = true;
+        this.ship.sprite.debug = inDebug;
+        this.ship.sprite.self = this;
+        this.ship.sprite.addImage(this.ship.img);
+        this.ship.sprite.setCollider("circle");
+        this.ship.sprite.immovable = true;
+        this.ship.sprite.scale = this.size/100;
+        this.ship.sprite.draw();
+        //this.ship.sprite.OBJ = this;
+        this.ship.sprite.maxSpeed = map(this.size, 1, 64, 25, 2, true);
+        this.ship.sprite.rotateToDirection = true;
         //this.attractTo();
-        console.log("Spawned: size:" + this.size);
+        //console.log("Spawned: size:" + this.size);
+        enemies.add(this.ship.sprite);
     }
 
     damage(bullet){
-        console.log(bullet.damageAmount);
-        this.health -= bullet.damageAmount;
-        if(this.health <= 0){
-            console.log("DEAD");
-            this.sprite.life = 1;
+        //sconsole.log(bullet.damageAmount);
+        this.ship.info.currentHealth -= bullet.damageAmount;
+        if(this.ship.info.currentHealth <= 0){
+            this.dropItem();
+            //SMOKE CLOUD
+            for(let i = 0, smoke; i < Math.floor(random(2,7)); i ++){
+            smoke = createSprite(this.ship.sprite.position.x + random(-50,50), this.ship.sprite.position.y + random(-50,50));
+            smoke.addAnimation('smoke', basicgreenexplosion);
+            smoke.looping = true;
+            smoke.life = 25;
+            smoke.scale = this.ship.sprite.scale;
+            }
+
+
+
+            //animation(basicgreenexplosion, );
+            player.currentPoints += this.ship.info.maxHealth;
+            //console.log("DEAD");
+            this.ship.sprite.life = 1;
+        }
+    }
+
+    dropItem(){
+        let dice = random(0,1);
+        if(dice < .3){
+            new Pickup(PickupTypes.Health, this.ship.sprite.position);
+        } else if (dice < .6){
+            new Pickup(PickupTypes.Money, this.ship.sprite.position);
         }
     }
 
     healthbar(){
         let valx;
-        valx = map(this.health, 0,  this.maxHealth, 0,  this.maxHealth/10);
+        valx = map(this.ship.info.currentHealth, 0,  this.ship.info.maxHealth, 0, this.ship.info.maxHealth/10);
         rectMode(CENTER);
         fill('red');
-        rect(this.sprite.position.x, this.sprite.position.y-50, valx, this.maxHealth/50);
+        rect(this.ship.sprite.position.x, this.ship.sprite.position.y-50, valx, this.ship.info.maxHealth/100);
     }
 
     attractTo(){
@@ -52,8 +113,8 @@ class Enemy{
     }
 
     cleanup(){
-        if(this.sprite.position.y > height+25){
-            this.sprite.remove();
+        if(this.ship.sprite.position.y > height+25){
+            this.ship.sprite.life = 0;
         }
     }
 

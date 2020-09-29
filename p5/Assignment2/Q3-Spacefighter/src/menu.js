@@ -1,3 +1,5 @@
+//STATUS - MEDIUM
+
 class Sidebar{
 
     displayPoints(){
@@ -6,8 +8,11 @@ class Sidebar{
         rectMode(CENTER);
         textAlign(CENTER);
         text("SCORE", settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 300);
-        //text(player.currentPoints, settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 350);
-        //
+        text(player.currentPoints, settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 350);
+        
+        text("$$MONEY$$", settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 400);
+        text(player.currentMoney, settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 450);
+
         text("DEBUG:",settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 800 )
         text('sprites: ' + allSprites.length,settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 825 )
     }
@@ -145,4 +150,4 @@ class Button {
     DrawSprite() {
         drawSprite(this.sprite);
     }
-}
+} 

@@ -1,3 +1,5 @@
+//STATUS - GOOD
+
 class Controls {
     constructor(){
         this.vector = new p5.Vector();

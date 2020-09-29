@@ -1,4 +1,6 @@
-let bullets;
+//STATUS - MEDIUM
+let inDebug = false;
+let bullets, enemybullets, pickups;
 let enemies;
 
 //OBJECTS
@@ -7,7 +9,7 @@ let player, controls;
 let shipimg, standardshotimg;
 //STATES
 let states = {LOADING: -1, MAINMENU: 0, PLAYING: 1, LEADERBOARD: 2};
-let currentState = states.LOADING;
+let currentState = states.MAINMENU;
 let PausedBOOL = false;
 let pauseGROUP;
 
@@ -19,10 +21,13 @@ function preload(){
     weaponsjson = loadJSON("src/json/weapons.json", preloadIMAGES);
 
 }
-
+let DEBUGspawner;
 function setup(){
     bullets = new Group();
+    enemybullets = new Group();
     enemies = new Group();
+    pickups = new Group();
+    
     console.log(weaponsjson);
     pauseGROUP = new Group();
     sidebarObj = new Sidebar();
@@ -34,16 +39,33 @@ function setup(){
 
     controls = new Controls();
     loadScreen = new LoadingScreen(500, 50);
-
+    inDebug ? debugMenu() : 0;
+    backgroundMake();
     
 }
 
+
 function mouseClicked(){
-    console.log(allSprites);
+   // console.log(allSprites);
 
     //DEBUG ENEMY SPAWN ON CLICK
     if(currentState == states.PLAYING){
-        new Enemy(stdredenemy, Math.floor(random(64, 256)), 2000);
+
+        if(typeof pointerSet != 'undefined')
+            pointerSet();
+
+        // let warninganim = createSprite(mouseX, mouseY);
+        // warninganim.scale = 3;
+        // if(random(0,1) > .5){
+        //     warninganim.addAnimation('warning', shopnotifcationanim);
+        // } else {
+        //     warninganim.addAnimation('warning', warningnotificationanim);
+        // }
+        // warninganim.life = 300;
+
+        //DEBUGspawner.spawnEnemy(6);
+        //player.dealDamage(20);
+        //new Enemy(createDebugShip(), Math.floor(random(64, 256)), 2000, random(30, settingsjson.globalSettings.canvasWidth - 30), random(-500, -50));
     }
 }
 
@@ -76,26 +98,36 @@ function gameLogic(){
         break;
 
         case states.MAINMENU:
-            background('red');
+            backgroundDraw();
             mainmenu.drawMenu();
             
         break;
 
         case states.PLAYING:
-            
-            background(125);
+            backgroundDraw();
+            controls.refresh()
+            enemies.collide(player.ship.sprite) ? player.dealDamage(1) : 0;
+            //background(125);
             loadScreen.startBar(1, () => {
                 console.log("DONE LOADING PLAYING")});
             if(loadScreen.COMPLETE){
-                background(125);
+                //background(125);
+                
                 drawSprites();
                 if(frameCount % 60 == 0){
-                    console.log(allSprites.length);
+                    //console.log(player.ship.sprite);
                 }
-
-                bullets.collide(enemies, (bullet,enemy) => {console.log(enemy); bullet.damage(bullet, enemy.self);});
+                bullets.overlap(enemies, (bullet,enemy) => {bullet.damage(bullet, enemy.self);});
+                enemybullets.overlap(player.ship.sprite, (bullet,player) => {bullet.damage(bullet, player.self); });
+                pickups.overlap(player.ship.sprite, (pickup, player) => pickup.self.effect(player, 100))
+                //bullets.collide(enemybullets, (bullet, enemybullet) => {bullet.life = 1; enemybullet.life = 0;});
                 //bullets.overlap(enemies, (bullet, enemy) => {dealDamage(bullet, enemy)})
-                bullets.map((bullet, i) => {
+                bullets.map((bullet) => {
+                    if(bullet.position.y < 0 || bullet.position.x < 0 || bullet.position.y > settingsjson.globalSettings.canvasWidth){
+                        bullet.remove();
+                    }
+                });
+                enemybullets.map((bullet) => {
                     if(bullet.position.y < 0 || bullet.position.x < 0 || bullet.position.y > settingsjson.globalSettings.canvasWidth){
                         bullet.remove();
                     }
@@ -104,29 +136,46 @@ function gameLogic(){
                 
                 
                 if(!PausedBOOL){
-                    controls.refresh();
+                                //DEBUG
+                    cleanEnemyArr();
                     
-                    player.shoot(controls.shoot1, controls.shoot2);
-                    for(enemy of enemies){
-                        enemy.OBJ.cleanup();
-                        enemy.OBJ.healthbar();
-                        // if(enemy.position.y < player.sprite.position.y){
-                        //     enemy.OBJ.attractTo(player.sprite.position.x, player.sprite.position.y);
-                        // } else {
-                        //     //enemy.OBJ.attractTo(width/2 - (settingsjson.globalSettings.sidebarWidth/2), height*2);
-                        // }
+                    for(enemy of enemyArr){
+                        //console.log(enemy);
+                        enemy.cleanup()
+                        enemy.healthbar();
                     }
+                    if(player.ship.info.currentHealth > 0){
+                        DEBUGspawner.spawnEnemy(2);
+                        player.shoot(controls.shoot1, controls.shoot2);
+                        player.healthbar();
+                        enemyArrShootAll();
+                    }
+                    player.movePlayer(controls.vector, 4 );
+                    // for(enemy of enemies){
+                    //     enemy.OBJ.cleanup();
+                    //     enemy.OBJ.healthbar();
+                    //     // if(enemy.position.y < player.sprite.position.y){
+                    //     //     enemy.OBJ.attractTo(player.sprite.position.x, player.sprite.position.y);
+                    //     // } else {
+                    //     //     //enemy.OBJ.attractTo(width/2 - (settingsjson.globalSettings.sidebarWidth/2), height*2);
+                    //     // }
+                    // }
+                    // for(enemy of enemies){
+                    // if(enemy.friction){
+                    //     enemy.friction = 0;
+                    // }
+                    // }
                 } else{
-                    for(enemy of enemies){
-                    enemy.friction = 1;
+                    // for(enemy of enemies){
+                    // enemy.friction = 1;
                     
-                    }
+                    // }
                     controls.zero();
                     pausemenu.drawMenu();
                 }
                 
                 //checkCollisions();
-                player.movePlayer(controls.vector, 4 );
+                
             } else {
                 loadScreen.drawBar();
             }
@@ -136,11 +185,30 @@ function gameLogic(){
             //sidebar = rect(settingsjson.globalSettings.canvasWidth - 1, 0, settingsjson.globalSettings.sidebarWidth, settingsjson.globalSettings.canvasHeight);
             sidebarObj.displayPoints();
 
+
+
         break;
         case states.LEADERBOARD:
 
         break;
     }
+}
+
+function createAlienShip(){
+    let debugEnemyWeapon1 = new WeaponPoint(
+        createVector(0, -(PLAYERSPRITESIZE/8)), //Position Offset
+        createVector(random(-4,2), 5), //Muzzle Direction
+        weaponsjson.Type.Basic.StandardShot //Bullet Type
+        );
+    return new Ship(alientent, 1000, createVector(1,1), [debugEnemyWeapon1]);
+}
+function createDebugShip(){
+    let debugEnemyWeapon1 = new WeaponPoint(
+        createVector(0, -(PLAYERSPRITESIZE/8)), //Position Offset
+        createVector(random(-4,2), 5), //Muzzle Direction
+        weaponsjson.Type.Basic.StandardShot //Bullet Type
+        );
+    return new Ship(stdredenemy, 1000, createVector(1,1), [debugEnemyWeapon1]);
 }
 
 function createMAINMENU(){
@@ -150,7 +218,10 @@ function createMAINMENU(){
         name: 'Play', OnClick: function () {
             allSprites.clear();
             //TODO
-            createNewDebugPlayer();
+            //createNewDebugPlayer();
+            player = new Player(shipStarterShip());
+            
+            DEBUGspawner = new enemySpawner(stdredenemy);
             
             player.placePlayer(width/2 - (settingsjson.globalSettings.sidebarWidth/2), height/2)
             currentState = states.PLAYING;
@@ -176,7 +247,7 @@ function createPAUSEMENU() {
                console.log("PRESSINGG");
                 //menuBUFFERGROUP.clear();
                // menuBUFFERGROUP.removeSprites()
-               //allSprites.clear();
+               
                PausedBOOL = false;
                //
                currentState = states.PLAYING;
@@ -190,9 +261,11 @@ function createPAUSEMENU() {
             name: 'Restart', OnClick: function () {
                 pauseGROUP.removeSprites();
                 enemies.removeSprites();
+                player.ship.sprite.remove();
                 //player = new Player(shipimg);
+                player = new Player(shipStarterShip());
                 player.placePlayer(width/2 - (settingsjson.globalSettings.sidebarWidth/2), height/2)
-    
+                enemyArr = [];
                 currentState = states.PLAYING;
                 PausedBOOL = false;
                 console.log("RESTART!");
