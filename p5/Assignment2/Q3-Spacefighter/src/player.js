@@ -4,20 +4,6 @@ const playerDEBUG = false;
 const PLAYERSPRITESIZE = 64;
 
 //Debug create Player
-/*
- mainmenu = new Menu(buttonmainimg,
-     {
-        name: 'Play', OnClick: function () {
-            allSprites.clear();
-            player = new Player(shipimg);
-            player.setWeapons(1, weaponsjson.Type.Basic.StandardShot);
-            player.setWeapons(2, weaponsjson.Type.Lazer.RedBeam);
-            player.placePlayer(width/2 - (settingsjson.globalSettings.sidebarWidth/2), height/2)
-            currentState = states.PLAYING;
-            console.log("PLAY!");
-        }},
-     {
-*/
 function createNewDebugPlayer(){
 
     debugWeaponL = new WeaponPoint(
@@ -31,7 +17,7 @@ function createNewDebugPlayer(){
         weaponsjson.Type.Basic.StandardShot //Bullet Type
         )
     playerDebugShip = new Ship(shipimg, 100, createVector(3,3), [debugWeaponL, debugWeaponR]);
-    
+
 }
 
 class Player{
@@ -65,9 +51,6 @@ class Player{
     shoot(shoot1, shoot2){
         //this.cleanupBullets();
         if(frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && shoot1){ //
-            //console.log(this.ship.info.weapons);
-            //console.log("PEW PEW");
-            //console.log(this.ship.info.weapons[0].bullet.type.force);
             new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type);
             new Bullet(this.ship, this.ship.info.weapons[1], this.ship.info.weapons[1].bullet.type);
         }
@@ -84,7 +67,7 @@ class Player{
     damage(bullet){
         //sconsole.log(bullet.damageAmount);
         this.dealDamage(bullet.damageAmount);
-        
+
     }
 
     dealDamage(amount){
@@ -92,11 +75,6 @@ class Player{
         this.ship.info.currentHealth -= amount;
         if(this.ship.info.currentHealth <= 0){
             this.die();
-
-            //animation(basicgreenexplosion, );
-            //console.log("DEAD");
-            //this.ship.sprite.life = 1;
-        
         }
     }
 
@@ -132,15 +110,11 @@ class Player{
         this.ship.sprite.position.y = y;
     }
 
-    
+
     movePlayer(vector, thrust){
         if(playerDEBUG && frameCount% 30 == 0){
             console.log(this.ship.info);
         }
-
-        // if(vector.y == 1){ //GOING BACKWARDS
-        //     thrust /= 2;
-        // }
 
         this.ship.sprite.setVelocity(
             vector.x * this.ship.info.vecAcceleration.x * thrust,

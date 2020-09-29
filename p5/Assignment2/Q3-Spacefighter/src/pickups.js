@@ -1,26 +1,55 @@
-let PickupTypes = {Health:1, Money:2};
-class Pickup{
-    constructor(type, pos){
+let PickupTypes = {}
+
+class PickupType {
+  constructor(logic, sprite) {
+    this.logic = logic;
+    this.sprite = sprite;
+  }
+}
+
+const initPickupTypes = () => {
+  console.log("Pickups -> Init PickupTypes")
+  const createPickupType = (logic, sprite) => ({ logic, sprite })
+
+  PickupTypes = {
+    Money: new PickupType(
+      (player, amount, pickup) => {
+        console.log(player.self.ship.info)
+        player.currentMoney += amount;
+        pickup.sprite.life = 0
+      },
+      moneyPickupimg
+    ),
+
+    Health: createPickupType(
+      (player, amount, pickup) => {
+        player.self.ship.info.currentHealth = constrain(player.self.ship.info.currentHealth + amount, 0, player.self.ship.info.maxHealth);
+        pickup.sprite.life = 0
+      },
+      moneyPickupimg
+    ),
+  };
+}
+
+class Pickup {
+      constructor(type, pos){
+      /**
+       * @type {PickupType}
+       */
         this.type = type;
-        this.img;
+        this.img = type.sprite;
         this.x = pos.x;
         this.y = pos.y;
-        this.effect;
-        this.sprite;
-        this.loadType();
+        this.pickupEffect = type.logic;
+        this.sprite = null;
         this.makeSprite(this.x, this.y);
     }
 
-    loadType(){
-        switch(this.type){
-            case PickupTypes.Health:
-                this.img = healthPickupimg;
-                //this.effect = this.giveHealth();
-            break;
-            case PickupTypes.Money:
-                this.img = moneyPickupimg;
-            break;
-        }
+    static Types = {}
+
+    static InitTypes = () => {
+      initPickupTypes()
+      this.Types = PickupTypes
     }
 
     makeSprite(x , y){
@@ -33,26 +62,7 @@ class Pickup{
         this.sprite.self = this;
     }
 
-    effect(sprite, amount){
-        switch(this.type){
-            case PickupTypes.Health:
-                this.giveHealth(sprite, amount);
-            break;
-            case PickupTypes.Money:
-                this.giveMoney(sprite, amount);
-            break;
-        }
-
-    }
-
-    giveMoney(re, amount){
-        //console.log(re.self.ship.info)
-        player.currentMoney += amount;
-        this.sprite.life = 0;
-    }
-    giveHealth(re, amount){
-        //console.log(re.self.ship.info)
-        re.self.ship.info.currentHealth = constrain(re.self.ship.info.currentHealth+amount, 0, re.self.ship.info.maxHealth);
-        this.sprite.life = 0;
+    effect(sprite, amount) {
+        this.pickupEffect(sprite, amount, this)
     }
 }

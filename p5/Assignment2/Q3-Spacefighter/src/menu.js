@@ -9,7 +9,7 @@ class Sidebar{
         textAlign(CENTER);
         text("SCORE", settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 300);
         text(player.currentPoints, settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 350);
-        
+
         text("$$MONEY$$", settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 400);
         text(player.currentMoney, settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 450);
 
@@ -18,73 +18,62 @@ class Sidebar{
     }
 }
 
-class LoadingScreen{
-    constructor(barWidth, barHeight){
-        this.barWidth = barWidth;
-        this.barHeight = barHeight;
-        this.waitTime = 0;
-        this.currentWait = 1;
-        this.strokeWght = 5;
-        this.STARTED = false;
-        this.COMPLETE = false;
-        this.functionOnComplete = null;
-    }
+class LoadingBar {
+    static barWidth = 500;
+    static barHeight = 50;
+    static waitTime = 0;
+    static currentWait = 1;
+    static strokeWght = 5;
+    static STARTED = false;
+    static COMPLETE = false;
+    static functionOnComplete = null;
 
-    startBar(wait, endfunc){
+    static startBar(wait, endfunc){
         if(!this.STARTED){
-            console.log("STARTING")
+            console.log("LoadingBar -> Starting...")
             this.waitTime = wait;
             this.functionOnComplete = endfunc;
             this.resetBar()
             this.STARTED = true;
         }
-        loadScreen.drawBar();
-        
+        this.drawBar();
     }
 
-    resetBar(){
-        console.log("Resetting Bar");
+    static resetBar(){
+        console.log("LoadingBar -> Resetting Bar");
         this.currentWait = 1;
         this.STARTED = false;
         this.COMPLETE = false;
     }
 
+    static drawBar() {
+        if(this.STARTED && !this.COMPLETE){
+            if(frameCount % this.waitTime == 0)
+                this.currentWait = constrain(this.currentWait+1, 0 , 100);
 
-    drawBar(){
-        if(this.STARTED){
-            if(!this.COMPLETE){
-                if(frameCount % this.waitTime == 0){
-                    this.currentWait = constrain(this.currentWait+1, 0 , 100);
-                }
-
-                noFill();
-                strokeWeight(this.strokeWght);
-                rectMode(CENTER);
-                rect(width/2, height/3 * 2, 
-                    this.barWidth, this.barHeight
-                )
-                fill('white');
-                noStroke();
-                rectMode(CORNER);
-                rect((width/2) - (this.barWidth/2) + (this.strokeWght/2),
-                    (height/3 * 2) - (this.barHeight/2 - (this.strokeWght/2 + 1)), 
-                    (this.barWidth/100) * this.currentWait - (this.strokeWght),
-                    (this.barHeight - this.strokeWght - 2)
-                )
-                if(this.currentWait == 100){
-                    this.functionOnComplete();
-                    //this.resetBar();
-                    this.COMPLETE = true;
-                    // this.resetBar()
-                    // this.startBar();
-                    //console.log(this.COMPLETE + " " + this.STARTED);
-
-                    //console.log("COMPLETED LOAD");
-                }
+            noFill();
+            strokeWeight(this.strokeWght);
+            rectMode(CENTER);
+            rect(width/2, height/3 * 2,
+              this.barWidth, this.barHeight
+            )
+            fill('white');
+            noStroke();
+            rectMode(CORNER);
+            rect((width/2) - (this.barWidth/2) + (this.strokeWght/2),
+              (height/3 * 2) - (this.barHeight/2 - (this.strokeWght/2 + 1)),
+              (this.barWidth/100) * this.currentWait - (this.strokeWght),
+              (this.barHeight - this.strokeWght - 2)
+            )
+            if(this.currentWait == 100){
+                this.functionOnComplete();
+                this.COMPLETE = true;
+                console.log("LoadingBar -> COMPLETED LOAD");
             }
         }
     }
 }
+
 
 class Menu {
     constructor(img, ...buttons) {
@@ -150,4 +139,4 @@ class Button {
     DrawSprite() {
         drawSprite(this.sprite);
     }
-} 
+}
