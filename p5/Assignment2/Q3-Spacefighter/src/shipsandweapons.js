@@ -6,6 +6,7 @@ function shipStarterShip(){
         200,
         createVector(2,2),
         [...weaponStaterWeaponLR()]);
+        //[...weaponSPREADLR()]);
 }
 
 //PLAYER WEAPONS
@@ -14,18 +15,39 @@ function shipStarterShip(){
 
 
     //L / R COMBOS
+
+    //Description : Standard 1 shot for both cannons
     function weaponStaterWeaponLR(){
         weaponStaterWeaponL = new WeaponPoint(
             createVector(-(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE/8)), //Position Offset
             createVector(0, -10), //Muzzle Direction
-            GameManager.weapons.Type.Basic.StandardShot //Bullet Type
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponTypes.Straight
             );
         weaponStaterWeaponR = new WeaponPoint(
             createVector(+(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE/8)), //Position Offset
             createVector(0, -10), //Muzzle Direction
-            GameManager.weapons.Type.Basic.StandardShot //Bullet Type
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponTypes.Straight
             );
         return [weaponStaterWeaponL, weaponStaterWeaponR];
+    }
+
+    //Description : L-Type shot... (straight and 90'degs)s
+    function weaponSpreadLR(){
+        weaponSpread_LL = new WeaponPoint(
+            createVector(-(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
+            createVector(0, -10), //Muzzle Direction
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponTypes.StraightL //Weapon Type
+            );
+        weaponSpread_LR = new WeaponPoint(
+            createVector(+(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
+            createVector(0, -10), //Muzzle Direction
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponTypes.StraightL //Weapon Type
+            );
+        return [weaponSpread_LL, weaponSpread_LR];
     }
 
 
@@ -39,7 +61,7 @@ function createAlienShip(){
         createVector(0, -(PLAYERSPRITESIZE/8)), //Position Offset
         createVector(-5, 5), //Muzzle Direction
         GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-        WeaponTypes.Straight
+        WeaponTypes.Straight //Weapon Type
         );
     return new Ship(alientent, 250, createVector(1,1), [debugEnemyWeapon1]);
 }
@@ -48,7 +70,7 @@ function createDebugShip(){
         createVector(0, -(PLAYERSPRITESIZE/8)), //Position Offset
         createVector(random(-4,2), 5), //Muzzle Direction
         GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-        WeaponTypes.spread360
+        WeaponTypes.spread360 //Weapon Type
         );
     return new Ship(stdredenemy, 250, createVector(1,1), [debugEnemyWeapon1]);
 }

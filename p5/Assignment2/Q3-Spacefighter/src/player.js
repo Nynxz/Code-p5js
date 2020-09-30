@@ -39,12 +39,15 @@ class Player{
         this.ship = ship;
 
         this.currentPoints = 0;
-        this.currentMoney = 0;
+        this.currentMoney = 10000;
         this.ship.sprite = (this.turnIntoSprite(this.ship.img));
         this.ship.sprite.image = this.ship.img;
         this.ship.sprite.immovable = true;
         this.ship.sprite.self = this;
         this.ship.sprite.debug = GameManager.settings.debug;
+        this.ship.info.maxShield = 100;
+        this.ship.info.currentShield = this.ship.info.maxShield;
+        
         this.ship.sprite.shield = new Array();
         delete this.ship.img;
         this.info = new Object();
@@ -65,13 +68,24 @@ class Player{
     }
 
     shoot(shoot1, shoot2){
-        //this.cleanupBullets();
-        if(frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && shoot1){ //
-            //console.log(this.ship.info.weapons);
-            //console.log("PEW PEW");
-            //console.log(this.ship.info.weapons[0].bullet.type.force);
-            new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type);
-            new Bullet(this.ship, this.ship.info.weapons[1], this.ship.info.weapons[1].bullet.type);
+        if(frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && shoot1){
+            switch(this.ship.info.weapons[0].weapontype){
+            case WeaponTypes.Straight: 
+                new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type);
+                new Bullet(this.ship, this.ship.info.weapons[1], this.ship.info.weapons[1].bullet.type);
+            break;
+
+            case WeaponTypes.StraightL:
+                new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type);
+                new Bullet(this.ship, this.ship.info.weapons[1], this.ship.info.weapons[1].bullet.type);
+                let bL = new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type);
+                bL.sprite.setSpeed(this.ship.info.weapons[0].basevecDirection.y, 0);
+                bL.sprite.position.y-=15;
+                let bR = new Bullet(this.ship, this.ship.info.weapons[1], this.ship.info.weapons[1].bullet.type);
+                bR.sprite.setSpeed(this.ship.info.weapons[0].basevecDirection.y, 180);
+                bR.sprite.position.y-=15;
+            break;
+            }
         }
     }
 
@@ -85,27 +99,48 @@ class Player{
         this.info.redHitScreen == 0 ? 0 : this.displayRedHitScreen();
     }
 
+    shieldbar(){
+        rectMode(CENTER);
+        if(this.ship.info.currentShield <= 10){
+            fill('lightblue')
+        } else {
+            fill('blue');
+        }
+        noStroke();
+        rect(this.ship.sprite.position.x, this.ship.sprite.position.y+55, (constrain(this.ship.info.currentShield, 0, this.ship.info.currentShield)), 15);
+        this.info.redHitScreen == 0 ? 0 : this.displayRedHitScreen();
+    }
+
+    shieldRecharge(amount){
+            this.ship.info.currentShield = constrain(this.ship.info.currentShield += amount, 0 , this.ship.info.maxShield)
+    }
+
     damage(bullet){
 
-        let shieldhit = createSprite(this.ship.sprite.position.x, this.ship.sprite.position.y);
+        if(this.ship.info.currentShield <= 10){
+            this.dealDamage(bullet.damageAmount);
+        } else{
+                
+            let shieldhit = createSprite(this.ship.sprite.position.x, this.ship.sprite.position.y);
 
-        if(this.ship.sprite.touching.top){
-            shieldhit.addAnimation("top", shieldhittop);
-        } else if(this.ship.sprite.touching.bottom){
-            shieldhit.addAnimation("bottom", shieldhitbottom);
-        }
-        else if(this.ship.sprite.touching.left){
-            shieldhit.addAnimation("left", shieldhitleft);
-        }
-        else if(this.ship.sprite.touching.right){
-            shieldhit.addAnimation("right", shieldhitright);
-        }
-        this.ship.sprite.shield.push(shieldhit);
-        shieldhit.scale = 3;
-        shieldhit.life = 50;
+            
+            if(this.ship.sprite.touching.top){
+                shieldhit.addAnimation("top", shieldhittop);
+            } else if(this.ship.sprite.touching.bottom){
+                shieldhit.addAnimation("bottom", shieldhitbottom);
+            }
+            else if(this.ship.sprite.touching.left){
+                shieldhit.addAnimation("left", shieldhitleft);
+            }
+            else if(this.ship.sprite.touching.right){
+                shieldhit.addAnimation("right", shieldhitright);
+            }
+            this.ship.sprite.shield.push(shieldhit);
+            shieldhit.scale = 3;
+            shieldhit.life = 50;
 
-        this.dealDamage(bullet.damageAmount);
-        
+            this.ship.info.currentShield -= bullet.damageAmount;
+        }
     }
 
     dealDamage(amount){
@@ -170,6 +205,10 @@ class Player{
     constrainPlayer(){
         this.ship.sprite.position.x = constrain(this.ship.sprite.position.x, 0+(PLAYERSPRITESIZE/2) + 35, width-(PLAYERSPRITESIZE/2) - GameManager.settings.globalSettings.sidebarWidth - 35);
         this.ship.sprite.position.y = constrain(this.ship.sprite.position.y, 0+(PLAYERSPRITESIZE/2) + 35, height-(PLAYERSPRITESIZE/2)-45);
+    }
+
+    zero(){
+        this.ship.sprite.setVelocity(0,0);
     }
 
 }

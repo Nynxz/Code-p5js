@@ -1,27 +1,13 @@
 //STATUS - MEDIUM
 
-// let enemyArr = [];
-
-// function cleanEnemyArr(){
-//     enemyArr = enemyArr.filter(enemy => enemy.ship.sprite.life > 0);
-// }
-
-// function enemyArrShootAll(){
-//     enemyArr.map(enemy => {
-//         enemy.ship.info.weapons[0].pointAt(createVector(GameManager.player.ship.sprite.position.x,GameManager.player.ship.sprite.position.y));
-//         enemy.shoot();
-//     });
-// }
-
 class Enemy{
-
 
     constructor(ship, size, points, x, y){
         this.ship = ship;
         this.size = size;
         this.points = points; 
         this.createEnemy(x, y);
-        GameManager.enemyShipsArray.push(this);
+        
     }
 
     shoot(){
@@ -62,10 +48,13 @@ class Enemy{
         this.ship.sprite.rotateToDirection = true;
         //this.attractTo();
         //console.log("Spawned: size:" + this.size);
+        
         GameManager.Groups.enemySprites.add(this.ship.sprite);
+
+        GameManager.enemyShipsArray.push(this);
     }
 
-    pauseEnemy(){ //MINIMAL NUMBER AS ROTATETODIRECTION = TRUE
+    pauseEnemy(){ //MINIMAL NUMBER BECAUSE ROTATETODIRECTION = TRUE //TODO FIX?
         this.ship.sprite.velocity.y = 0.00000000001;
     }
 
@@ -74,24 +63,22 @@ class Enemy{
     }
 
     damage(bullet){
-        //sconsole.log(bullet.damageAmount);
+
         this.ship.info.currentHealth -= bullet.damageAmount;
+        
         if(this.ship.info.currentHealth <= 0){
             this.dropItem();
             //SMOKE CLOUD
             for(let i = 0, smoke; i < Math.floor(random(2,7)); i ++){
-            smoke = createSprite(this.ship.sprite.position.x + random(-50,50), this.ship.sprite.position.y + random(-50,50));
-            smoke.addAnimation('smoke', basicgreenexplosion);
-            smoke.looping = true;
-            smoke.life = 25;
-            smoke.scale = this.ship.sprite.scale;
+                smoke = createSprite(this.ship.sprite.position.x + random(-50,50), this.ship.sprite.position.y + random(-50,50));
+                smoke.addAnimation('smoke', basicgreenexplosion);
+                smoke.looping = true;
+                smoke.life = 25;
+                smoke.scale = this.ship.sprite.scale;
             }
 
-
-
-            //animation(basicgreenexplosion, );
             GameManager.player.currentPoints += this.ship.info.maxHealth;
-            //console.log("DEAD");
+
             this.ship.sprite.life = 1;
         }
     }

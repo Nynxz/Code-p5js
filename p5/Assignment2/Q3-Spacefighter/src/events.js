@@ -12,6 +12,7 @@ class Game{
 
 
 class enemySpawner{
+
     constructor(enemyType){
         this.enemyType = enemyType;
     }
@@ -22,7 +23,7 @@ class enemySpawner{
                 let type = random(0,1);
                 let enemy;
                 if(type > .5){
-                    enemy = createAlienShip()
+                    enemy =  createAlienShip();
                 } else 
                 {
                     enemy = createDebugShip();
@@ -33,7 +34,7 @@ class enemySpawner{
         }
         if(frameCount % 600 == 0){
             let rand = random(0,1);
-            rand > .9 ? startShopEventDEBUG() : 0;
+            rand > .2 ? startShopEventDEBUG() : 0;
         }
     }
 }

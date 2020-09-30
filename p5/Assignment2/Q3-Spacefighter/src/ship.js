@@ -20,7 +20,7 @@ class Ship{
     }
 }
 
-let WeaponTypes = {Straight : 0, spread360 : 1};
+let WeaponTypes = {Straight : 'straight', spread360 : 'spread360', StraightL : "straightL"};
 
 class WeaponPoint{
     constructor(vecOffset, vecDirection, bulletType, weapontype){
@@ -53,7 +53,7 @@ class WeaponPoint{
         // if(frameCount % 60){
         //     console.log(this.bullet.type.force);
         // }
-        vec = p5.Vector.mult(vec.normalize(), this.basevecDirection.mag());
+        vec = p5.Vector.mult(vec.normalize(), 5);
         
         stroke('#00FF00');
         
@@ -80,7 +80,7 @@ class Bullet{
         this.sprite.damageAmount = bulletType.damage;
         this.sprite.setVelocity(shooter.vecDirection.x , shooter.vecDirection.y);
         this.sprite.damage = this.damage.bind();
-        this.sprite.debug = GameManager.debug;
+        this.sprite.debug =  GameManager.settings.debug;
         this.sprite.self = this;
         if(enemyBool){
             GameManager.Groups.enemybullets.add(this.sprite);

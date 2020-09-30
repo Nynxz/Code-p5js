@@ -8,18 +8,25 @@ class Sidebar{
     }
 
     static displayPoints(){
-        fill('black');
+        fill('black')
         textSize(32);
         rectMode(CENTER);
         textAlign(CENTER);
-        text("SCORE", GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 300);
-        text(GameManager.player.currentPoints, GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 350);
+        text("SCORE", GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 150);
+        text(GameManager.player.currentPoints, GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 200);
         
-        text("$$MONEY$$", GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 400);
-        text(GameManager.player.currentMoney, GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 450);
+        text("MONEY", GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 300);
+        text(GameManager.player.currentMoney, GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 350);
 
-        text("DEBUG:",GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 800 )
-        text('sprites: ' + allSprites.size(),GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 825 )
+
+        text('HP: ' + constrain(GameManager.player.ship.info.currentHealth, 0,GameManager.player.ship.info.currentHealth) + "/" +GameManager.player.ship.info.maxHealth ,GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 500);
+        text('SHIELD: ' + Math.floor(GameManager.player.ship.info.currentShield) + "/" + GameManager.player.ship.info.maxShield ,GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 550);
+
+       
+        if(GameManager.settings.debug){
+            text("DEBUG:",GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 800 )
+            text('sprites: ' + allSprites.size(),GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 825 )
+        }
     }
 }
 
@@ -64,7 +71,7 @@ class LoadingScreen{
                 }
 
                 noFill();
-                strokeWeight(this.strokeWght);
+                //strokeWeight(this.strokeWght);
                 rectMode(CENTER);
                 stroke('red');
                 rect(width/2, height/3 * 2, 
@@ -106,6 +113,7 @@ class Menu {
     }
 
     drawMenu() {
+       
   //      console.log(this.buttons);
         for (let i = 0; i < this.buttons.length; i++) {
             //console.log("Drawing button")

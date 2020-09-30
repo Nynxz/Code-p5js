@@ -1,12 +1,7 @@
 //STATUS - MEDIUM
 
-//OBJECTS
-let player;
 //IMAGES
 let shipimg, standardshotimg;
-//STATES
-
-let PausedBOOL = false;
 
 function preload(){
     GameManager.settings = loadJSON("src/json/settings.json");
@@ -19,7 +14,7 @@ function setup(){
     //useQuadTree(true);
     GameManager.initGroups();
     GameManager.initDifficulty();
-
+    GameManager.initShopItems()
 
     //MAKE STATIC POGU
     sidebarObj = new Sidebar();
@@ -49,10 +44,11 @@ function mouseClicked(){
 
 function keyPressed(){
     if(keyCode == 27){
-        console.log(allSprites.length);
+        console.dir(allSprites.length);
         if(GameManager.paused){
             unpauseGame();
         } else {
+            GameManager.currentPauseState = GameManager.pauseStatesE.PAUSE;
             pauseGame();
         }
     }
@@ -60,22 +56,34 @@ function keyPressed(){
 
 function unpauseGame(){
     GameManager.paused = !GameManager.paused;
-
+    GameManager.Groups.spaceEvents.removeSprites();
     GameManager.Groups.pickups.forEach((pickup) => {pickup.self.unpausePickup()});
     GameManager.Groups.enemySprites.forEach((enemy) => {enemy.self.unpauseEnemy()});
     GameManager.Groups.enemybullets.forEach((bullet) => {bullet.self.unpauseBullet()});
-
+    GameManager.Groups.friendlybullets.forEach((bullet) => {bullet.self.unpauseBullet()});
     GameManager.Groups.pauseMenu.removeSprites();
+    GameManager.Groups.ShopItems.removeSprites();
+    GameManager.Groups.hoverToolTip.removeSprites();
 }
 
 function pauseGame(){
     GameManager.paused = true;
-
+    GameManager.player.zero();
     GameManager.Groups.pickups.forEach((pickup) => {pickup.self.pausePickup()});
     GameManager.Groups.enemySprites.forEach((enemy) => {enemy.self.pauseEnemy()});
     GameManager.Groups.enemybullets.forEach((bullet) => {bullet.self.pauseBullet()});
+    GameManager.Groups.friendlybullets.forEach((bullet) => {bullet.self.pauseBullet()});
+    
+    switch(GameManager.currentPauseState){
+        case GameManager.pauseStatesE.PAUSE:
+            createPAUSEMENU();
+        break;
 
-    createPAUSEMENU();
+        case GameManager.currentPauseState.SHOP:
+
+        break;
+    }
+    
 }
 
 function draw(){
@@ -117,73 +125,100 @@ function gameLogic(){
 
                 if(!GameManager.paused){
 
-                    //#region COLLISIONS
 
-                    //BULLETS > ENEMIES
-                    GameManager.Groups.friendlybullets.collide(GameManager.Groups.enemySprites, (bullet,enemy) => {bullet.damage(bullet, enemy.self);});
-                    //ENEMIES > PLAYER
-                    GameManager.Groups.enemySprites.collide(GameManager.player.ship.sprite) ? GameManager.player.dealDamage(1) : 0;
-                    //PLAYER > BULLETS
-                    GameManager.player.ship.sprite.collide(GameManager.Groups.enemybullets, (player, bullet) => {
-                        bullet.damage(bullet, player.self);
-                    });
-                    //PLAYER > PICKUPS
-                    GameManager.player.ship.sprite.overlap(GameManager.Groups.pickups, (player, pickup) => pickup.self.effect(player, 100));
-
-                    //PLAYER > EVENTS
-                    GameManager.player.ship.sprite.overlap(GameManager.Groups.spaceEvents, () =>{
-                        console.log("IN SHOP");
-                    })
-
-                    //#endregion 
                     
                     //#region CLEANUP 
 
                     GameManager.cleanBulletGroups();
                     GameManager.enemyShipsCleanArray();
-
                     //#endregion
                    
-
-
                     //#region PLAYER ALIVE
                     if(GameManager.player.ship.info.currentHealth > 0){
-    
+
+                        //#region COLLISIONS
+
+                        //BULLETS > ENEMIES
+                        GameManager.Groups.friendlybullets.collide(GameManager.Groups.enemySprites, (bullet,enemy) => {bullet.damage(bullet, enemy.self);});
+                        
+                        //ENEMIES > PLAYER
+                        GameManager.Groups.enemySprites.collide(GameManager.player.ship.sprite) ? GameManager.player.dealDamage(1) : 0;
+                        //PLAYER > BULLETS
+                        GameManager.player.ship.sprite.collide(GameManager.Groups.enemybullets, (player, bullet) => {
+                            bullet.damage(bullet, player.self);
+                        });
+                        //PLAYER > PICKUPS
+                        GameManager.player.ship.sprite.overlap(GameManager.Groups.pickups, (player, pickup) => pickup.self.effect(player, 100));
+                        //PLAYER > EVENTS
+                        GameManager.player.ship.sprite.overlap(GameManager.Groups.spaceEvents, () =>{
+                            
+                            GameManager.currentPauseState = GameManager.pauseStatesE.SHOP;
+                            pauseGame(GameManager.currentPauseState);
+                            createShopPage()
+                            createSHOPMENU();
+                            console.log("IN SHOP");
+                        })
+                        //#endregion 
+
                         //SPAWN ENEMIES FROM SPAWNER
                         DEBUGspawner.spawnEnemy(GameManager.Difficulty.maxEnemies);
-    
+
                         //ALLOW PLAYER TO SHOOT
                         GameManager.player.shoot(Controls.shoot1, Controls.shoot2);
-    
+
                         //DRAW PLAYER HEALTHBAR
                         GameManager.player.healthbar();
-
+                        GameManager.player.shieldbar();
+                        GameManager.player.shieldRecharge(.05);
                         //REPOSITION SHIELD TO PLAYER
                         GameManager.player.ship.sprite.shield.map(e => e.position = GameManager.player.ship.sprite.position);
 
                         //ALLOW ENEMIES TO SHOOT
                         GameManager.enemyShipsShootAll(GameManager.enemyShipsArray, GameManager.player.ship);
-    
+
                     } 
                     //#endregion
 
                     //MOVE PLAYER BASED ON CONTROLS VECTOR
                     GameManager.player.movePlayer(Controls.vector, 4 );
 
-                    //DRAW SIDEBAR
-                    Sidebar.drawSideBar();
+                   
                     
-                } else{ //enemy.velocity.y = 0.0001
-                    //GameManager.Groups.enemySprites.forEach((enemy) => {enemy.maxSpeed = 0});
+                } else{ 
+
+                    //PAUSED
                     Controls.zero();
-                    pausemenu.drawMenu();
-                }                
+                    GameManager.player.movePlayer(Controls.vector, 0 );
+
+
+                    switch(GameManager.currentPauseState){
+
+                        case GameManager.pauseStatesE.PAUSE:
+                            pausemenu.drawMenu();
+                        break;
+
+                        case GameManager.pauseStatesE.SHOP:
+                            imageMode(CENTER);
+                            image(shoppageimg, width/2 - GameManager.settings.globalSettings.sidebarWidth/2, height/2);
+                            drawSprites(GameManager.Groups.ShopItems);
+                            drawSprites(GameManager.Groups.hoverToolTip);
+                            GameManager.Groups.hoverToolTip.forEach(e => e.self.drawInfo());
+                            //shopmenu.drawMenu();
+                        break;
+
+                    }
+                    
+                }       
+                //DRAW SIDEBAR
+                imageMode(CORNER);
+                Sidebar.drawSideBar();
             } else {
                 loadScreen.drawBar();
             }
-            fill('blue');
-            rectMode(CORNER)
+            // fill('blue');
+            // rectMode(CORNER)
         break;
+
 
         case GameManager.statesE.LEADERBOARD:
 
@@ -191,6 +226,10 @@ function gameLogic(){
     }
 }
 
+
+function createShopPage(){
+    image(shoppageimg, width/2, height/2);
+}
 
 
 function createMAINMENU(){
@@ -215,7 +254,7 @@ function createMAINMENU(){
      {
         name: 'Options', OnClick: function () {
             console.log("OPTIONS!");
-            
+
             allSprites.clear();
 
             GameManager.player = new Player(shipimg);
@@ -230,13 +269,13 @@ function createMAINMENU(){
 function createPAUSEMENU() {
     pausemenu = new Menu(buttonmainimg,
         {
-           name: 'Resume', OnClick: function () {
+            name: 'Resume', OnClick: function () {
                 console.log("RESUME!");
                 unpauseGame()
                 GameManager.currentState = GameManager.statesE.PLAYING;
                 GameManager.Groups.pauseMenu.removeSprites();
-           }},
-           {
+            }},
+            {
             name: 'Restart', OnClick: function () {
                 console.log("RESTART!");
                 GameManager.Groups.pauseMenu.removeSprites();
@@ -251,8 +290,13 @@ function createPAUSEMENU() {
             {
              name: 'Exit', OnClick: function () {
                 location.reload();
-             }});
+            }});
+    pausemenu.buttons.map(spr => spr.sprite.position.x-=GameManager.settings.globalSettings.sidebarWidth/2);
     pausemenu.addToAGroup(GameManager.Groups.pauseMenu);
+}
+
+function createSHOPMENU(){
+    Shop.drawStdWeaponItems();
 }
 
 

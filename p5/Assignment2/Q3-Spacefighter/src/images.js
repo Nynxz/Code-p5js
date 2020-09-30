@@ -11,6 +11,14 @@ function preloadIMAGES(inputJson){
     healthPickupimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/pickups/healthpickup.png');
     moneyPickupimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/pickups/moneypickup.png');
 
+    shoppageimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/Menu/shoppage.png');
+    shopbuttonimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/Menu/shopbutton.png');
+    tooltipimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/ShopItems/tooltipimg.png');
+
+
+    stdShotShopImg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/ShopItems/stdShot.png');
+    LShotShopImg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/ShopItems/LShot.png');
+
     //console.log(Object.entries(inputJson));
 
     GameManager.weapons.Type.Basic.StandardShot.img = loadImage( GameManager.weapons.Type.Basic.StandardShot.img);
@@ -45,4 +53,5 @@ function setupIMAGES(){
     shipimg.resize(PLAYERSPRITESIZE,PLAYERSPRITESIZE);
     buttonmainimg.resize(400,200);
     sidebarimg.resize(500,1000);
+    tooltipimg.resize(200,100);
 }
