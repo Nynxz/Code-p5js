@@ -23,12 +23,12 @@ function createNewDebugPlayer(){
     debugWeaponL = new WeaponPoint(
         createVector(-(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE/8)), //Position Offset
         createVector(0, -1), //Muzzle Direction
-        weaponsjson.Type.Basic.StandardShot //Bullet Type
+        GameManager.weapons.Type.Basic.StandardShot //Bullet Type
         );
     debugWeaponR = new WeaponPoint(
         createVector(+(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE/8)), //Position Offset
         createVector(0, -1), //Muzzle Direction
-        weaponsjson.Type.Basic.StandardShot //Bullet Type
+        GameManager.weapons.Type.Basic.StandardShot //Bullet Type
         )
     playerDebugShip = new Ship(shipimg, 100, createVector(3,3), [debugWeaponL, debugWeaponR]);
     
@@ -44,7 +44,7 @@ class Player{
         this.ship.sprite.image = this.ship.img;
         this.ship.sprite.immovable = true;
         this.ship.sprite.self = this;
-        this.ship.sprite.debug = inDebug;
+        this.ship.sprite.debug = GameManager.settings.debug;
         this.ship.sprite.shield = new Array();
         delete this.ship.img;
         this.info = new Object();
@@ -76,14 +76,33 @@ class Player{
     }
 
     healthbar(){
-        fill('#00FF00');
         rectMode(CENTER);
+        stroke('red');
+        rect(this.ship.sprite.position.x, this.ship.sprite.position.y+55, this.ship.info.maxHealth, 15);
+        fill('#00FF00');
         noStroke();
         rect(this.ship.sprite.position.x, this.ship.sprite.position.y+55, (constrain(this.ship.info.currentHealth, 0, this.ship.info.currentHealth)), 15);
         this.info.redHitScreen == 0 ? 0 : this.displayRedHitScreen();
     }
 
     damage(bullet){
+
+        let shieldhit = createSprite(this.ship.sprite.position.x, this.ship.sprite.position.y);
+
+        if(this.ship.sprite.touching.top){
+            shieldhit.addAnimation("top", shieldhittop);
+        } else if(this.ship.sprite.touching.bottom){
+            shieldhit.addAnimation("bottom", shieldhitbottom);
+        }
+        else if(this.ship.sprite.touching.left){
+            shieldhit.addAnimation("left", shieldhitleft);
+        }
+        else if(this.ship.sprite.touching.right){
+            shieldhit.addAnimation("right", shieldhitright);
+        }
+        this.ship.sprite.shield.push(shieldhit);
+        shieldhit.scale = 3;
+        shieldhit.life = 50;
 
         this.dealDamage(bullet.damageAmount);
         
@@ -103,7 +122,7 @@ class Player{
     }
 
     displayRedHitScreen(){
-        image(redhittedimg,-100,-100, settingsjson.globalSettings.canvasWidth +200 , height +200);
+        image(redhittedimg,-100,-100, GameManager.settings.globalSettings.canvasWidth +200 , height +200);
         this.info.redHitScreen--;
     }
 
@@ -136,9 +155,6 @@ class Player{
 
     
     movePlayer(vector, thrust){
-        if(playerDEBUG && frameCount% 30 == 0){
-            console.log(this.ship.info);
-        }
 
         // if(vector.y == 1){ //GOING BACKWARDS
         //     thrust /= 2;
@@ -152,8 +168,8 @@ class Player{
         this.constrainPlayer();
     }
     constrainPlayer(){
-        this.ship.sprite.position.x = constrain(this.ship.sprite.position.x, 0+(PLAYERSPRITESIZE/2) + 35, width-(PLAYERSPRITESIZE/2) - settingsjson.globalSettings.sidebarWidth - 35);
-        this.ship.sprite.position.y = constrain(this.ship.sprite.position.y, 0+(PLAYERSPRITESIZE/2), height-(PLAYERSPRITESIZE/2));
+        this.ship.sprite.position.x = constrain(this.ship.sprite.position.x, 0+(PLAYERSPRITESIZE/2) + 35, width-(PLAYERSPRITESIZE/2) - GameManager.settings.globalSettings.sidebarWidth - 35);
+        this.ship.sprite.position.y = constrain(this.ship.sprite.position.y, 0+(PLAYERSPRITESIZE/2) + 35, height-(PLAYERSPRITESIZE/2)-45);
     }
 
 }

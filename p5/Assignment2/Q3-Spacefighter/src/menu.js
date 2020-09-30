@@ -2,21 +2,27 @@
 
 class Sidebar{
 
-    displayPoints(){
+    static drawSideBar(){
+        image(sidebarimg,GameManager.settings.globalSettings.canvasWidth,0, GameManager.settings.globalSettings.sidebarWidth, GameManager.settings.globalSettings.canvasHeighteight+1000);
+        Sidebar.displayPoints()
+    }
+
+    static displayPoints(){
         fill('black');
         textSize(32);
         rectMode(CENTER);
         textAlign(CENTER);
-        text("SCORE", settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 300);
-        text(player.currentPoints, settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 350);
+        text("SCORE", GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 300);
+        text(GameManager.player.currentPoints, GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 350);
         
-        text("$$MONEY$$", settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 400);
-        text(player.currentMoney, settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 450);
+        text("$$MONEY$$", GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 400);
+        text(GameManager.player.currentMoney, GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 450);
 
-        text("DEBUG:",settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 800 )
-        text('sprites: ' + allSprites.length,settingsjson.globalSettings.canvasWidth + (settingsjson.globalSettings.sidebarWidth/2), 825 )
+        text("DEBUG:",GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 800 )
+        text('sprites: ' + allSprites.size(),GameManager.settings.globalSettings.canvasWidth + (GameManager.settings.globalSettings.sidebarWidth/2), 825 )
     }
 }
+
 
 class LoadingScreen{
     constructor(barWidth, barHeight){
@@ -60,6 +66,7 @@ class LoadingScreen{
                 noFill();
                 strokeWeight(this.strokeWght);
                 rectMode(CENTER);
+                stroke('red');
                 rect(width/2, height/3 * 2, 
                     this.barWidth, this.barHeight
                 )

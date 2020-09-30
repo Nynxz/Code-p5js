@@ -11,8 +11,11 @@ The game must involve at least 4 scenes, there must be a:
 You should be able to navigate between the scenes
 Note: each scene needs to only be navigable by at least one other scene (with the exception of the loading scene, it can be a time-oriented screen)
 
+
 ## 2. Loops
 The game must use at least 3 loops which are fundamental to the operation of the program.
+
+SPAWNING ENEMIES - 
 
 ## 3. Arrays
 The  game  must  incorporate  at  least  3  arrays,  with  at  least  1  of  the  arrays  being  used  to manage a list of objects on the screen (such as opponents).
@@ -24,6 +27,8 @@ There  must  exist  player  interaction  using  a  keyboard.  The  game  needs  
 There must be at least 1 image present in the final product (separate to sprites) that is drawn at an appropriate size.
 
 Note: it is up to you which scene you incorporate the image in.
+
+HIT IMAGE
 
 ## 6. Sprites
 The p5.play library must be incorporated with a minimum of 3 sprites used. The spritesmust have  collision  detection  (between  sprites)  and  must  move  independently.  Sprites  must  be animated (i.e. a moving object, changing size or color)

@@ -1,15 +1,17 @@
 //STATUS - MEDIUM
 
-let enemyArr = [];
+// let enemyArr = [];
 
-function cleanEnemyArr(){
-    enemyArr = enemyArr.filter(enemy => enemy.ship.sprite.life > 0);
-}
+// function cleanEnemyArr(){
+//     enemyArr = enemyArr.filter(enemy => enemy.ship.sprite.life > 0);
+// }
 
-function enemyArrShootAll(){
-    enemyArr.map(enemy => {
-        enemy.ship.info.weapons[0].pointAt(createVector(player.ship.sprite.position.x,player.ship.sprite.position.y)) ; enemy.shootAtPlayer()});
-}
+// function enemyArrShootAll(){
+//     enemyArr.map(enemy => {
+//         enemy.ship.info.weapons[0].pointAt(createVector(GameManager.player.ship.sprite.position.x,GameManager.player.ship.sprite.position.y));
+//         enemy.shoot();
+//     });
+// }
 
 class Enemy{
 
@@ -19,11 +21,11 @@ class Enemy{
         this.size = size;
         this.points = points; 
         this.createEnemy(x, y);
-        enemyArr.push(this);
+        GameManager.enemyShipsArray.push(this);
     }
 
-    shootAtPlayer(){
-        if(this.ship.sprite.position.y > 0 && this.ship.sprite.position.y < player.ship.sprite.position.y && frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && random(0,1) < .1){
+    shoot(){
+        if(this.ship.sprite.position.y > 0 && this.ship.sprite.position.y < GameManager.player.ship.sprite.position.y && frameCount % this.ship.info.weapons[0].bullet.type.cooldown == 0 && random(0,1) < .1){
             
             if(this.ship.info.weapons[0].weapontype == WeaponTypes.Straight)
                 new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
@@ -42,13 +44,13 @@ class Enemy{
     createEnemy(x, y){
         this.ship.sprite = createSprite(x, y);
         this.ship.sprite.velocity.y = 1;
-        this.ship.sprite.life = 5000;
+        this.ship.sprite.life =  5000;
         
         //console.log(this.sprite);
         
         
         //this.ship.sprite.debug = true;
-        this.ship.sprite.debug = inDebug;
+        this.ship.sprite.debug = GameManager.settings.debug;
         this.ship.sprite.self = this;
         this.ship.sprite.addImage(this.ship.img);
         this.ship.sprite.setCollider("circle");
@@ -60,7 +62,15 @@ class Enemy{
         this.ship.sprite.rotateToDirection = true;
         //this.attractTo();
         //console.log("Spawned: size:" + this.size);
-        enemies.add(this.ship.sprite);
+        GameManager.Groups.enemySprites.add(this.ship.sprite);
+    }
+
+    pauseEnemy(){ //MINIMAL NUMBER AS ROTATETODIRECTION = TRUE
+        this.ship.sprite.velocity.y = 0.00000000001;
+    }
+
+    unpauseEnemy(){
+        this.ship.sprite.velocity.y = 1;
     }
 
     damage(bullet){
@@ -80,7 +90,7 @@ class Enemy{
 
 
             //animation(basicgreenexplosion, );
-            player.currentPoints += this.ship.info.maxHealth;
+            GameManager.player.currentPoints += this.ship.info.maxHealth;
             //console.log("DEAD");
             this.ship.sprite.life = 1;
         }
@@ -100,11 +110,11 @@ class Enemy{
         valx = map(this.ship.info.currentHealth, 0,  this.ship.info.maxHealth, 0, this.ship.info.maxHealth/10);
         rectMode(CENTER);
         fill('red');
-        rect(this.ship.sprite.position.x, this.ship.sprite.position.y-50, valx, this.ship.info.maxHealth/100);
+        rect(this.ship.sprite.position.x, this.ship.sprite.position.y-50, valx, this.ship.info.maxHealth/25);
     }
 
     attractTo(){
-        this.sprite.attractionPoint(this.size, player.sprite.position.x, player.sprite.position.y);
+        this.sprite.attractionPoint(this.size, GameManager.player.sprite.position.x, GameManager.player.sprite.position.y);
     }
 
     cleanup(){

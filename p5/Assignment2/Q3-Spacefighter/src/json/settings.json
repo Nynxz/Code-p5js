@@ -4,5 +4,6 @@
         "canvasHeight": 1000,
         "canvasWidth" : 1200,
         "sidebarWidth": 500
-    }
+    },
+    "debug": false
 }

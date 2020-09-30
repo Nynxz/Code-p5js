@@ -1,4 +1,7 @@
+//STATUS - GOOD
+
 class Background{
+    
     static stars = new Array();
 
     static makeBackground(amount){

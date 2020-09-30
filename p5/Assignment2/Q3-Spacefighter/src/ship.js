@@ -57,7 +57,7 @@ class WeaponPoint{
         
         stroke('#00FF00');
         
-        inDebug ? line(this.ship.sprite.position.x, this.ship.sprite.position.y, target.x, target.y) : 0;
+        GameManager.settings.debug ? line(this.ship.sprite.position.x, this.ship.sprite.position.y, target.x, target.y) : 0;
         stroke('black');
         this.vecDirection = vec;
     }
@@ -80,11 +80,12 @@ class Bullet{
         this.sprite.damageAmount = bulletType.damage;
         this.sprite.setVelocity(shooter.vecDirection.x , shooter.vecDirection.y);
         this.sprite.damage = this.damage.bind();
-        this.sprite.debug = inDebug;
+        this.sprite.debug = GameManager.debug;
+        this.sprite.self = this;
         if(enemyBool){
-            enemybullets.add(this.sprite);
+            GameManager.Groups.enemybullets.add(this.sprite);
         }else{
-            bullets.add(this.sprite);
+            GameManager.Groups.friendlybullets.add(this.sprite);
         }
         this.sprite.addAnimation("hitmarker", hitmarkeranim);
         //ship.currentBullets.push(this);
@@ -98,6 +99,16 @@ class Bullet{
         bullet.changeAnimation("hitmarker");
         bullet.scale = bullet.damage;
         bullet.life = 25;
+    }
+
+    pauseBullet(){
+        this.sprite.oldVelocity = new p5.Vector();
+        this.sprite.oldVelocity = this.sprite.velocity;
+        this.sprite.velocity = createVector(0,0); 
+    }
+
+    unpauseBullet(){
+        this.sprite.velocity = this.sprite.oldVelocity;
     }
 
 }

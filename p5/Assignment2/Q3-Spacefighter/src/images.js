@@ -11,10 +11,10 @@ function preloadIMAGES(inputJson){
     healthPickupimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/pickups/healthpickup.png');
     moneyPickupimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/pickups/moneypickup.png');
 
-    console.log(Object.entries(inputJson));
+    //console.log(Object.entries(inputJson));
 
-    weaponsjson.Type.Basic.StandardShot.img = loadImage(weaponsjson.Type.Basic.StandardShot.img);
-    weaponsjson.Type.Lazer.RedBeam.img = loadImage(weaponsjson.Type.Lazer.RedBeam.img);
+    GameManager.weapons.Type.Basic.StandardShot.img = loadImage( GameManager.weapons.Type.Basic.StandardShot.img);
+    GameManager.weapons.Type.Lazer.RedBeam.img = loadImage( GameManager.weapons.Type.Lazer.RedBeam.img);
     
     //standardshotimg = weaponsjson.Type.Basic.StandardShot.img
     //redbeamimg = weaponsjson.Type.Lazer.RedBeam.img

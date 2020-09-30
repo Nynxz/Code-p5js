@@ -162,10 +162,10 @@ function createDebugEnemyA(){
 }
 
 function startHazardEventDEBUG(){
-    new SpaceEvent(SpaceEvents.Hazard, 300, Math.floor(random(5,25)));
+    new SpaceEvent(SpaceEvent.SpaceEvents.Hazard, 300, Math.floor(random(5,25)));
     console.log("Starting Hazard!");
 }
 function startShopEventDEBUG(){
-    new SpaceEvent(SpaceEvents.Shop, 500, 5);
+    new SpaceEvent(SpaceEvent.SpaceEvents.Shop, 500, 5);
     console.log("Starting Shop!");
 }

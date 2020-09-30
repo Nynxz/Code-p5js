@@ -17,8 +17,8 @@ class enemySpawner{
     }
 
     spawnEnemy(count, randomCount){
-        if(frameCount % 320 == 0 && enemies.length < 5){
-            for(let i = 0; i < count; i++){
+        if(GameManager.Groups.enemySprites.length < GameManager.Difficulty.maxEnemies){
+            for(let i = 0; i <= count-GameManager.Groups.enemySprites.length; i++){
                 let type = random(0,1);
                 let enemy;
                 if(type > .5){
@@ -28,7 +28,7 @@ class enemySpawner{
                     enemy = createDebugShip();
                 }
                 console.log("SPAWNING");
-                new Enemy(enemy, Math.floor(random(84, 256)), 2000, random(30, settingsjson.globalSettings.canvasWidth - 30), random(-500, -50));
+                new Enemy(enemy, Math.floor(random(84, 256)), 2000, random(30, GameManager.settings.globalSettings.canvasWidth - 30), random(-500, -50));
             }
         }
         if(frameCount % 600 == 0){
@@ -38,9 +38,10 @@ class enemySpawner{
     }
 }
 
-let SpaceEvents = {Shop: 0, Hazard: 1};
-let SpaceEventSides = {Left: 0, Right: 1};
 class SpaceEvent{
+
+    static SpaceEvents = {Shop: 0, Hazard: 1};
+    static SpaceEventSides = {Left: 0, Right: 1};
     constructor(event, duration, width){
         this.event = event;
         this.width = width;
@@ -52,39 +53,39 @@ class SpaceEvent{
 
     pickSide(){
         if(random(0,1) >= .5){
-            this.side = SpaceEventSides.Left;
+            this.side = SpaceEvent.SpaceEventSides.Left;
         } else {
-            this.side = SpaceEventSides.Right;
+            this.side = SpaceEvent.SpaceEventSides.Right;
         }
     }
 
     setEvent(){
         switch(this.event){
-            case SpaceEvents.Shop:
+            case SpaceEvent.SpaceEvents.Shop:
                 this.anim = shopnotifcationanim;
             break;
-            case SpaceEvents.Hazard:
+            case SpaceEvent.SpaceEvents.Hazard:
                 this.anim = warningnotificationanim
             break;
         }
     }
 
     announceEvent(){
-        if(this.side == SpaceEventSides.Left){
+        if(this.side == SpaceEvent.SpaceEventSides.Left){
             for(let i = 0; i < this.width; i++){
                 for(let j = 0; j < height; j+=100){
                     let notif = createSprite((i+1) * 25, j + (50));
                     notif.addAnimation('spin', this.anim);
-                    notif.addToGroup(events);
+                    notif.addToGroup(GameManager.Groups.spaceEvents);
                     notif.life = this.maxDuration;
                 }
             }
         } else {
             for(let i = 0; i < this.width; i++){
                 for(let j = 0; j < height; j+=100){
-                    let notif = createSprite(settingsjson.globalSettings.canvasWidth - ((i+1) * 25), j + 50);
+                    let notif = createSprite(GameManager.settings.globalSettings.canvasWidth - ((i+1) * 25), j + 50);
                     notif.addAnimation('spin', this.anim);
-                    notif.addToGroup(events);
+                    notif.addToGroup(GameManager.Groups.spaceEvents);
                     notif.life = this.maxDuration;
                 }
 
