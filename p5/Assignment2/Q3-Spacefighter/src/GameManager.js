@@ -4,11 +4,9 @@ class GameManager{
     //Property for the Player
     static player;
 
-
     //ARRAYS
     static enemyShipsArray = new Array();
 
-    
     //GROUPS
     static Groups = new Object();
     static initGroups(){
@@ -46,7 +44,6 @@ class GameManager{
     static initDifficulty(){
         GameManager.Difficulty.maxEnemies = 5;
     }
-
 
     //SETTINGS
 
