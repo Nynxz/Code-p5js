@@ -1,12 +1,6 @@
 class Shop{
 
-    // static Items = new Group();
-
-    // static initItems(){
-    //     Shop.Items.StdShot
-    // }
-
-    static Items = new Array();
+    //static Items = new Array();
 
     static drawStdWeaponItems(){
 
@@ -23,6 +17,9 @@ class Shop{
                     textlinesvals = Object.values(GameManager.shopItems.StdShot);
                     textlines = textlines.map((e,i) => e.concat(": " + textlinesvals[i]));
                     spr.onMousePressed = () => {
+                        GameManager.Groups.friendlybullets.removeSprites();
+                        GameManager.Groups.enemybullets.removeSprites();
+
                         GameManager.player.ship.info.weapons = new weaponStaterWeaponLR();
                     };
                     GameManager.Groups.hoverToolTip.removeSprites();
@@ -38,12 +35,14 @@ class Shop{
                             GameManager.shopItems.LShot.bought = true;
                             textlinesvals[0] == false ? GameManager.player.currentMoney -= textlinesvals[1] : 0;
                             textlinesvals[0] = true;
-
+                            GameManager.Groups.friendlybullets.removeSprites();
+                            GameManager.Groups.enemybullets.removeSprites();
                             GameManager.player.ship.info.weapons =  weaponSpreadLR();
                         } else {
                             console.log("NOT ENOUGH MONEY");
                         }
                     }
+
                 break;
                 default: 
                     timage = shopbuttonimg;
@@ -54,11 +53,6 @@ class Shop{
                 spr.mouseActive = true; 
                 spr.onMouseOver = function(){
                     imageMode(CORNER);
-                    for(let obj in GameManager.shopItems){
-                        
-                        console.log(obj)
-                    }
-
                     new ToolTip(textlines);
 
                 };

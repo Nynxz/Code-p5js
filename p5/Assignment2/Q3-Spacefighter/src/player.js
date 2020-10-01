@@ -148,7 +148,9 @@ class Player{
         this.ship.info.currentHealth -= amount;
         if(this.ship.info.currentHealth <= 0){
             this.die();
-
+            let date = new Date();
+            GameManager.highscores.highscores.push({name: "PlayerName", score: GameManager.player.currentPoints, 'date': date.toDateString()});
+            saveJSON(GameManager.highscores, 'highscores.json');
             //animation(basicgreenexplosion, );
             //console.log("DEAD");
             //this.ship.sprite.life = 1;

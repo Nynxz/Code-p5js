@@ -1,25 +1,15 @@
 let vid;
-function setup(){
-    createCanvas(500,500);
-    
-    vid = createVideo(["/p5/Assignment2/quicktest/BigSchnozer.mp4"], playVideo);
 
+function setup(){
+    vid = createVideo(["/p5/Assignment2/quicktest/BigSchnozer.mp4"], playVideo);
 }
-function draw(){
-    background(155);
-}
+
 
 function playVideo(){
-    vid.volume(0);
+    //vid.volume(0);
     vid.autoplay();
-    vid.hide();
 }
 
-function keyPressed(){
-    vid.stop()
-    vid.play();
-    vid.show();
-}
 
 
 // function ultraSickOneLiner(sprite, speed){

@@ -1,5 +1,12 @@
-//STATUS - GOOD
-
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
+// TODO DO NOT INCLUDE
 function debugWarn(value){
     let capName;
     if(typeof value === 'undefined'){
@@ -154,18 +161,3 @@ function debugMenu(){
     
 }
 
-function createDebugEnemyN(){
-    new Enemy(createDebugShip(), Math.floor(random(84, 256)), 2000, mouseX, mouseY);
-}
-function createDebugEnemyA(){
-    new Enemy(createAlienShip(), Math.floor(random(84, 256)), 2000, mouseX, mouseY);
-}
-
-function startHazardEventDEBUG(){
-    new SpaceEvent(SpaceEvent.SpaceEvents.Hazard, 300, Math.floor(random(5,25)));
-    console.log("Starting Hazard!");
-}
-function startShopEventDEBUG(){
-    new SpaceEvent(SpaceEvent.SpaceEvents.Shop, 500, 5);
-    console.log("Starting Shop!");
-}

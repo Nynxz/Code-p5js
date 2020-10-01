@@ -1,39 +1,61 @@
 //STATUS - GOOD
 
+
+//Class for handling the Controls
 class Controls {
 
+    //Input Enum
+    static Inputs = 
+        {
+            W : 87,
+            S : 83,
+            D : 68,
+            A : 65,
+            Space : 32,
+            E : 69,
+            LShift : 16,
+            ESC : 27
+        }
+
+
+    //Vector for Movement
     static vector = new p5.Vector();
+
+    //Shoot1 Boolean
     static shoot1 = 0;
+    
+    //Shoot2 Boolean
     static shoot2 = 0;
     
 
+    //Force Vector to 0
     static zero(){
         this.vector.x = 0;
         this.vector.y = 0;
     }
 
+    //Function to refresh current inputs
     static refresh(){
-        this.vector.x = 0;
-        this.vector.y = 0;
+        
+        //Reset
+        Controls.zero();
 
-        if(keyIsDown(87)){ //W
+        //Set Vector Based on Inputs. X & Y = (-1 - 1)
+        if(keyIsDown(Controls.Inputs.W)){
             this.vector.y = constrain(this.vector.y-=1, -1, 1); 
         } 
-        if(keyIsDown(83)){ //S
+        if(keyIsDown(Controls.Inputs.S)){
             this.vector.y = constrain(this.vector.y+=1, -1, 1); 
         }
-        if(keyIsDown(68)){ //D
+        if(keyIsDown(Controls.Inputs.D)){
             this.vector.x = constrain(this.vector.x+=1, -1, 1); 
         } 
-        if(keyIsDown(65)){ //S
+        if(keyIsDown(Controls.Inputs.A)){
             this.vector.x = constrain(this.vector.x-=1, -1, 1); 
         }
 
-        this.shoot1 = keyIsDown(32) ? 1 : 0;
-        this.shoot2 = keyIsDown(69) ? 1 : 0;
-        
-        if(playerDEBUG && frameCount % 30 == 0){
-            console.log(this.vector);
-        }
+        //Set Shoot Boolean Based on Inputs
+        this.shoot1 = keyIsDown(Controls.Inputs.Space) ? 1 : 0;
+        this.shoot2 = keyIsDown(Controls.Inputs.E) ? 1 : 0;
     }
 }

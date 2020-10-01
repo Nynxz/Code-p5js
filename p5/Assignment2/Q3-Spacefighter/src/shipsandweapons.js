@@ -74,3 +74,12 @@ function createDebugShip(){
         );
     return new Ship(stdredenemy, 250, createVector(1,1), [debugEnemyWeapon1]);
 }
+
+
+
+function createDebugEnemyN(){
+    new Enemy(createDebugShip(), Math.floor(random(84, 256)), 2000, mouseX, mouseY);
+}
+function createDebugEnemyA(){
+    new Enemy(createAlienShip(), Math.floor(random(84, 256)), 2000, mouseX, mouseY);
+}
