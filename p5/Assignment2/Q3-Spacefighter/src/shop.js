@@ -1,5 +1,9 @@
 class Shop{
 
+    //Function to Draw Shop Page
+    static createShopPage(){
+        image(shoppageimg, width/2, height/2);
+    }
     //static Items = new Array();
 
     static drawStdWeaponItems(){
@@ -96,4 +100,8 @@ class ToolTip{
         //     text(txt, mouseX+75, mouseY+25);
         // }
     }
+}
+
+function createSHOPMENU(){
+    Shop.drawStdWeaponItems();
 }

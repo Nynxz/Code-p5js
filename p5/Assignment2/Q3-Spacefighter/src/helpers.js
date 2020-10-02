@@ -151,13 +151,5 @@ function debugMenu(){
                         pointerSet = undefined;
                     }
                 });
-
-        
-    
-
-
-    
     //debugoptionsToggle.hide();
-    
 }
-
