@@ -5,8 +5,7 @@
 class Controls {
 
     //Input Enum
-    static Inputs = 
-        {
+    static Inputs = {
             W : 87,
             S : 83,
             D : 68,
@@ -14,7 +13,8 @@ class Controls {
             Space : 32,
             E : 69,
             LShift : 16,
-            ESC : 27
+            ESC : 27,
+            ENTER: 13
         }
 
 
@@ -27,6 +27,7 @@ class Controls {
     //Shoot2 Boolean
     static shoot2 = 0;
     
+    static enter = 0;
 
     //Force Vector to 0
     static zero(){
@@ -57,5 +58,7 @@ class Controls {
         //Set Shoot Boolean Based on Inputs
         this.shoot1 = keyIsDown(Controls.Inputs.Space) ? 1 : 0;
         this.shoot2 = keyIsDown(Controls.Inputs.E) ? 1 : 0;
+
+        this.enter = keyIsDown(Controls.Inputs.ENTER) ? 1 : 0;
     }
 }

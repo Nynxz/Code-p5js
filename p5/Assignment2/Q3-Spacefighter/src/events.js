@@ -47,7 +47,7 @@ class Spawner{
         }
 
         //EVERY 10 Seconds
-        if(frameCount % (GameManager.settings.globalSettings.FPS*10) == 0){
+        if(frameCount % (GameManager.settings.globalSettings.FPS*20) == 0){
             //Random Chance
             let rand = random(0,1);
             //Spawn Shop or Hazard
@@ -84,7 +84,7 @@ class SpaceEvent{
 
     //Function to start a New Hazard Event
     static startHazardEvent(){
-        new SpaceEvent(SpaceEvent.SpaceEvents.Hazard, 300, Math.floor(random(10,27)));
+        new SpaceEvent(SpaceEvent.SpaceEvents.Hazard, 300, Math.floor(random(10,20)));
         console.log("Starting Hazard!");
     }
     //Function to start a New Shop Event

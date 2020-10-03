@@ -287,6 +287,7 @@ function createMAINMENU(){
             GameManager.currentState = GameManager.statesE.PLAYING;
 
             console.log("PLAY!");
+            uiClicksound.play();
         }},
         //Button 2[1] - Leaderboard
         {
@@ -302,11 +303,13 @@ function createMAINMENU(){
                 GameManager.currentState = GameManager.statesE.LEADERBOARD;
 
                 console.log("LEADERBOARD!");
+                uiClicksound.play();
             }},
         //Button 3[2] - Options //TODO UNUSED
         {
         name: 'Options', OnClick: function () {
             console.log("OPTIONS!");
+            uiClicksound.play();
 
         }});
 
@@ -340,6 +343,7 @@ function createPAUSEMENU() {
             GameManager.Groups.pauseMenu.removeSprites();
 
             console.log("RESUME!");
+            uiClicksound.play();
         }},
         //Button 2[1] - Restart
         {
@@ -348,6 +352,9 @@ function createPAUSEMENU() {
             //Remove Sprites
             GameManager.Groups.pauseMenu.removeSprites();
             GameManager.removeAllSprites();
+
+            //Reset Difficulty
+            GameManager.initDifficulty();
 
             //Reinit Shop
             GameManager.initShopItems();
@@ -366,12 +373,15 @@ function createPAUSEMENU() {
             GameManager.paused = false;
 
             console.log("RESTART!");
+            uiClicksound.play();
         }},
         //Button 3[2] - Exit
         {
         name: 'Exit', OnClick: function () {
+            uiClicksound.play();
             //RELOAD THE SCREEN
             location.reload();
+            
         }}
     );
 
@@ -388,6 +398,7 @@ function createLEADERBOARD(){
     //Create Base Sprite in Center
     let leaderboard = createSprite(width/2, height/2);
     //Add Image to Sprite
+    leaderboardimg.resize(700, 700);
     leaderboard.addImage(leaderboardimg);    
     //Scale Sprite
     leaderboard.scale = 1.4;
@@ -399,6 +410,7 @@ function createLEADERBOARD(){
         allSprites.clear();
         createMAINMENU();
         GameManager.currentState = GameManager.statesE.MAINMENU;
+        uiClicksound.play();
     };
     //Add Image to Back Button
     backButton.addImage(backbuttonimg);
@@ -413,14 +425,30 @@ function drawLEADERBOARDSCORES(){
     textAlign(LEFT, CENTER);
     //Font Size
     textSize(32);
+    GameManager.highscores.highscores = GameManager.highscores.highscores.sort((a, b) => b.score - a.score);
     //For Each Score in HighScore
     GameManager.highscores.highscores.forEach((e, i) => {
         //Format and Draw Text
-        text(
+        //If less than 20, draw the score, else if 20, draw ..., then nothing else.
+        i < 20 ? text(
             "NAME: " + GameManager.highscores.highscores[i].name + " |  " + GameManager.highscores.highscores[i].score + "  | " + GameManager.highscores.highscores[i].date,
-            width/2 - 345, 
-            250 + (i * 30)
-        );
+            width/2 - 325, 
+            250 + (i * 35) ) : i == 20 ? text("......", width/2 - 325, 250 + (i * 35)) : 0;
     });
+}
+
+function createNameInput(){
+    GameManager.nameinput = createInput('PlayerName');
+    GameManager.nameinput.size(200, 30);
+    GameManager.nameinput.position(width/2 - (GameManager.settings.globalSettings.sidebarWidth/2) - 100, height/2 + 132)
+    
+}
+
+
+//Function to Draw Name Input Field at Game Over
+function drawGameOver(){
+    imageMode(CENTER);
+    image(namefieldimg, width/2 - (GameManager.settings.globalSettings.sidebarWidth/2), height/2 + 100, 500, 200);
+    image(gameoverimg, width/2 - (GameManager.settings.globalSettings.sidebarWidth/2), 200, 600,300);
 }
 

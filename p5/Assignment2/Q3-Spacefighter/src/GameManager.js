@@ -42,7 +42,14 @@ class GameManager{
     //DIFFICULTY
     static Difficulty = new Object();
     static initDifficulty(){
+        GameManager.Difficulty.currentKills = 0;
         GameManager.Difficulty.maxEnemies = 5;
+    }
+    static addKill(){
+        GameManager.Difficulty.currentKills++;
+        if(GameManager.Difficulty.currentKills % 15 == 0){
+            GameManager.Difficulty.maxEnemies++;
+        }
     }
 
     //SETTINGS
@@ -120,9 +127,37 @@ class GameManager{
         //L-Shot
         GameManager.shopItems.LShot = {
             bought: false,
-            cost: 200,
+            cost: 500,
             description: "\nShoots 90 degrees each ways,\naswell as up!",
             img: LShotShopImg
+        },
+        //X-Shot
+        GameManager.shopItems.XShot = {
+            bought: false,
+            cost: 1000,
+            description: "\nShoots 90 degrees each ways,\naswell as up and down!",
+            img: XShotShopImg
+        },
+        //Spread Shot
+        GameManager.shopItems.SpreadShot = {
+            bought: false,
+            cost: 2000,
+            description: "\nShoots all the ways",
+            img: spreadShotShopImg
+        },
+
+        //UPGRADES
+        GameManager.shopItems.HEALTHUP = {
+            bought: false,
+            cost: 250,
+            description: "\nIncrease Health by 100",
+            img: HealthUpButtonShopImg
+        },
+        GameManager.shopItems.SHIELDUP = {
+            bought: false,
+            cost: 400,
+            description: "\nIncrease Shield by 100",
+            img: ShieldUpButtonShopImg
         }
     }
 

@@ -19,6 +19,8 @@ class Enemy{
 
         //Create this Enemy
         this.createEnemy(x, y);
+
+        console.log("SPAWNING ENEMY");
     }
 
     //Function to Create Enemy
@@ -87,12 +89,12 @@ class Enemy{
             //Weapon Type Checks
 
             //Standard Shot
-            if(this.ship.info.weapons[0].weapontype == WeaponTypes.Straight){
+            if(this.ship.info.weapons[0].weapontype == WeaponPoint.WeaponTypes.Straight){
                 //Spawn a New Bullet
                 new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
             }
             //Spread 360 Shot
-            else if(this.ship.info.weapons[0].weapontype == WeaponTypes.spread360){
+            else if(this.ship.info.weapons[0].weapontype == WeaponPoint.WeaponTypes.spread360){
                 //18 Shots
                 for(let i = 0; i < 18; i++){
 
@@ -108,8 +110,17 @@ class Enemy{
                     //Set Standard Scale (backup)
                     bullet.sprite.scale = 1
                 }
+                enemyspreadsound.play();
             }
         }
+    }
+
+    resetEnemy(){
+        this.ship.sprite.life =  5000;
+        this.ship.sprite.position.x = Math.floor(random(15, GameManager.settings.globalSettings.canvasWidth - 15));
+        this.ship.sprite.position.y = Math.floor(random(-15, -500));
+        this.ship.info.currentHealth = this.ship.info.maxHealth;
+
     }
 
     //Function to Pause the Enemy
@@ -122,11 +133,10 @@ class Enemy{
         this.ship.sprite.velocity.y = 1;
     }
 
-    //Function to Damage the Enemy
-    damage(bullet){
-
+    dealDamage(amount){
+        
         //Take Bullet Damage away from Ship Health
-        this.ship.info.currentHealth -= bullet.damageAmount;
+        this.ship.info.currentHealth -= amount;
         
         //If this Enemy is 'Dead'
         if(this.ship.info.currentHealth <= 0){
@@ -158,8 +168,15 @@ class Enemy{
             GameManager.player.currentPoints += this.ship.info.maxHealth;
             
             //Set the Ship Sprite Life to virtually nothing for 'p5play' cleanup
-            this.ship.sprite.life = 1;
+            //this.ship.sprite.life = 1;
+            explosionsound.play();
+            GameManager.addKill();
+            this.resetEnemy();
         }
+    }
+    //Function to Damage the Enemy
+    damage(bullet){
+        this.dealDamage(bullet.damageAmount)
     }
 
     //Function to drop an Item
@@ -170,9 +187,9 @@ class Enemy{
         
         //New Pickups at Sprite Position
         if(dice < .3){
-            new Pickup(PickupTypes.Health, this.ship.sprite.position);
+            new Pickup(Pickup.Types.Health, this.ship.sprite.position);
         } else if (dice < .6){
-            new Pickup(PickupTypes.Money, this.ship.sprite.position);
+            new Pickup(Pickup.Types.Money, this.ship.sprite.position);
         }
     }
 
@@ -205,9 +222,10 @@ class Enemy{
 
         //If the Enemy Ship is Lower then the canvas 
         if(this.ship.sprite.position.y > height+25){
-
+            //Lose Points for Letting Enemy Reach Bottom
+            GameManager.player.currentPoints = constrain(GameManager.player.currentPoints-(this.points/2), 0, GameManager.player.currentPoints);
             //Set the Ship Sprite Life to virtually nothing for 'p5play' cleanup
-            this.ship.sprite.life = 1;
+            this.resetEnemy();
         }
     }
 

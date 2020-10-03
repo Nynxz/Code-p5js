@@ -1,4 +1,5 @@
 //STATUS - MEDIUM
+
 //WEAPON AND SHIP SPAWNING LIBRARY
 //PLAYER SHIPS
 function shipStarterShip(){
@@ -22,13 +23,13 @@ function shipStarterShip(){
             createVector(-(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE/8)), //Position Offset
             createVector(0, -10), //Muzzle Direction
             GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-            WeaponTypes.Straight
+            WeaponPoint.WeaponTypes.Straight
             );
         weaponStaterWeaponR = new WeaponPoint(
             createVector(+(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE/8)), //Position Offset
             createVector(0, -10), //Muzzle Direction
             GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-            WeaponTypes.Straight
+            WeaponPoint.WeaponTypes.Straight
             );
         return [weaponStaterWeaponL, weaponStaterWeaponR];
     }
@@ -39,17 +40,46 @@ function shipStarterShip(){
             createVector(-(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
             createVector(0, -10), //Muzzle Direction
             GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-            WeaponTypes.StraightL //Weapon Type
+            WeaponPoint.WeaponTypes.StraightL //Weapon Type
             );
         weaponSpread_LR = new WeaponPoint(
             createVector(+(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
             createVector(0, -10), //Muzzle Direction
             GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-            WeaponTypes.StraightL //Weapon Type
+            WeaponPoint.WeaponTypes.StraightL //Weapon Type
             );
         return [weaponSpread_LL, weaponSpread_LR];
     }
-
+    function weaponXLR(){
+        weaponSpread_XL = new WeaponPoint(
+            createVector(-(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
+            createVector(0, -10), //Muzzle Direction
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponPoint.WeaponTypes.StraightX //Weapon Type
+            );
+        weaponSpread_XR = new WeaponPoint(
+            createVector(+(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
+            createVector(0, -10), //Muzzle Direction
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponPoint.WeaponTypes.StraightX //Weapon Type
+            );
+        return [weaponSpread_XL, weaponSpread_XR];
+    }
+    function weaponAllSpreadLR(){
+        weaponSpread_XL = new WeaponPoint(
+            createVector(-(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
+            createVector(0, -10), //Muzzle Direction
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponPoint.WeaponTypes.StraightSpread //Weapon Type
+            );
+        weaponSpread_XR = new WeaponPoint(
+            createVector(+(PLAYERSPRITESIZE/2), -(PLAYERSPRITESIZE)), //Position Offset
+            createVector(0, -10), //Muzzle Direction
+            GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
+            WeaponPoint.WeaponTypes.StraightSpread //Weapon Type
+            );
+        return [weaponSpread_XL, weaponSpread_XR];
+    }
 
 
 //ENEMY SHIPS
@@ -61,18 +91,18 @@ function createAlienShip(){
         createVector(0, -(PLAYERSPRITESIZE/8)), //Position Offset
         createVector(-5, 5), //Muzzle Direction
         GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-        WeaponTypes.Straight //Weapon Type
+        WeaponPoint.WeaponTypes.Straight //Weapon Type
         );
-    return new Ship(alientent, 250, createVector(1,1), [debugEnemyWeapon1]);
+    return new Ship(alientent, 50*GameManager.Difficulty.maxEnemies, createVector(1,1), [debugEnemyWeapon1]);
 }
 function createDebugShip(){
     let debugEnemyWeapon1 = new WeaponPoint(
         createVector(0, -(PLAYERSPRITESIZE/8)), //Position Offset
         createVector(random(-4,2), 5), //Muzzle Direction
         GameManager.weapons.Type.Basic.StandardShot, //Bullet Type
-        WeaponTypes.spread360 //Weapon Type
+        WeaponPoint.WeaponTypes.spread360 //Weapon Type
         );
-    return new Ship(stdredenemy, 250, createVector(1,1), [debugEnemyWeapon1]);
+    return new Ship(stdredenemy, 35*GameManager.Difficulty.maxEnemies, createVector(1,1), [debugEnemyWeapon1]);
 }
 
 

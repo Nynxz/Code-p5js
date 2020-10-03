@@ -5,12 +5,13 @@ function preload(){
     GameManager.settings = loadJSON("src/json/settings.json");
     GameManager.weapons = loadJSON("src/json/weapons.json", preloadIMAGES);
     GameManager.highscores = loadJSON("src/json/highscores.json");
-
+    preloadSOUNDS();
     //LOAD FONT
     GameManager.settings.font = loadFont('/p5/Assignment2/Q3-Spacefighter/Assets/Fonts/AlienWars-3V3M.ttf');
 }
 
 function setup(){
+
     //useQuadTree(true);
 
     //Initialise Groups
@@ -48,6 +49,13 @@ function setup(){
     
     //TODO DONT INCLUDE? helpers.js
     GameManager.settings.debug ? debugMenu() : 0;
+
+    mainmusicsound.setVolume(0)
+    mainmusicsound.play();
+    mainmusicsound.setVolume(1)
+    mainmusicsound.setLoop(true);
+
+    //createNameInput();
 }
 
 
@@ -152,7 +160,8 @@ function gameLogic(){
             Background.backgroundDraw();
             //Draw Main Menu
             mainmenu.drawMenu();
-
+            imageMode(CENTER);
+            image(spacefighterlogoimg, width/2, height/4, 1000, 500);
         break;
 
         //If Currently in Playing
@@ -179,11 +188,14 @@ function gameLogic(){
 
                         //#region COLLISIONS
 
+                        GameManager.Groups.enemySprites.collide(GameManager.Groups.enemySprites, (enemy) => {enemy.position.x += (random(-25, 25)); enemy.position.y += (random(-250, -150))});
+
                         //BULLETS > ENEMIES
                         GameManager.Groups.friendlybullets.collide(GameManager.Groups.enemySprites, (bullet,enemy) => {bullet.damage(bullet, enemy.self);});
                         
                         //ENEMIES > PLAYER
                         GameManager.Groups.enemySprites.collide(GameManager.player.ship.sprite) ? GameManager.player.dealDamage(1) : 0;
+                        
                         //PLAYER > BULLETS
                         GameManager.player.ship.sprite.collide(GameManager.Groups.enemybullets, (player, bullet) => {
                             bullet.damage(bullet, player.self);
@@ -192,13 +204,15 @@ function gameLogic(){
                         GameManager.player.ship.sprite.overlap(GameManager.Groups.pickups, (player, pickup) => pickup.self.effect(player, 100));
                         //PLAYER > EVENTS
                         GameManager.player.ship.sprite.overlap(GameManager.Groups.spaceEventsShop, () =>{
-                            
+                            GameManager.Groups.enemybullets.removeSprites();
+                            GameManager.Groups.friendlybullets.removeSprites();
                             GameManager.currentPauseState = GameManager.pauseStatesE.SHOP;
                             pauseGame(GameManager.currentPauseState);
                             Shop.createShopPage()
                             createSHOPMENU();
                             console.log("IN SHOP");
                         })
+                        GameManager.Groups.enemySprites.overlap(GameManager.Groups.spaceEventsHazards, (enemy, nul) => {enemy.self.dealDamage(100)});
                         GameManager.player.ship.sprite.overlap(GameManager.Groups.spaceEventsHazards)  ? GameManager.player.dealDamage(1) : 0;
                         
                         //#endregion 
@@ -223,6 +237,7 @@ function gameLogic(){
                             
                         //MOVE PLAYER BASED ON CONTROLS VECTOR
                         GameManager.player.movePlayer(Controls.vector, 4 );
+                        
                     } 
 
                 } else{ 
@@ -261,6 +276,7 @@ function gameLogic(){
                     }
                     
                 }       
+                GameManager.player.currentLifes < 0 ? drawGameOver() : 0;
                 //DRAW SIDEBAR
                 imageMode(CORNER);
                 Sidebar.drawSideBar();

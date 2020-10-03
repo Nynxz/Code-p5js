@@ -1,81 +1,145 @@
+//Class for the Shop
+class ShopButton{
+    constructor(GMShotItem, x, y){
+        this.item = GMShotItem;
+        this.image = GMShotItem.img;
+        this.textlines = new Array();
+        this.textlines = Object.keys(GMShotItem);
+        this.textlinesvals = new Array();
+        this.textlinesvals = Object.values(GMShotItem);
+        this.textlines = this.textlines.map((e,i) => e.concat(": " + this.textlinesvals[i]));
+        this.sprite = createSprite(x, y);
+        this.sprite.addImage(this.image);
+        this.sprite.setDefaultCollider();
+        this.sprite.mouseActive = true;
+        this.sprite.onMouseOver = () => {
+            new ToolTip(this.textlines);
+        }
+        this.sprite.onMouseOut = () =>{
+            GameManager.Groups.hoverToolTip.removeSprites();
+        }
+       
+
+        GameManager.Groups.ShopItems.add(this.sprite);
+        //If Item is Locked
+        if(this.textlinesvals[0] == false){
+            this.lockedsprite = createSprite(x,y);
+            this.lockedsprite.addImage(shopLockedImg);
+            this.lockedsprite.scale = .5;
+            GameManager.Groups.ShopItems.add(this.lockedsprite)
+        }
+
+    }
+
+    addEffect(func){
+        this.sprite.onMousePressed = () =>{
+            if(GameManager.player.currentMoney >= this.textlinesvals[1] || this.textlinesvals[0] == true){
+                this.item.bought = true;
+                this.textlinesvals[0] == false ? GameManager.player.currentMoney -= this.textlinesvals[1] : 0;
+                this.textlinesvals[0] = true;
+                GameManager.Groups.friendlybullets.removeSprites();
+                GameManager.Groups.enemybullets.removeSprites();
+                GameManager.player.ship.info.weapons = new func();
+                
+                if(this.lockedsprite)
+                    this.lockedsprite.remove();
+
+                //GameManager.Groups.ShopItems.remove(this.lockedsprite);
+                //TODO func;
+                console.log("YEH BOIS");
+            } else {
+                Shop.showNotEnoughMoney();
+                console.warn("NOT ENOUGH CASH BOI");
+            }
+        };
+    }
+
+    addPowerUp(func){
+        if(this.lockedsprite)
+            this.lockedsprite.remove();
+
+        this.sprite.onMousePressed = () =>{
+            if(GameManager.player.currentMoney >= this.textlinesvals[1]){
+                GameManager.player.currentMoney -= this.textlinesvals[1];
+                func();
+                console.log("YEH BOIS");
+            } else {
+                Shop.showNotEnoughMoney();
+                console.warn("NOT ENOUGH CASH BOI");
+            }
+        };
+    }
+}
+function DEFAULTSHOP(){
+    return weaponStaterWeaponLR();
+}
 class Shop{
 
+    static showNotEnoughMoney(){
+        let notenough = createSprite(width/2 - (GameManager.settings.globalSettings.sidebarWidth/2), height/2)
+                notenough.addImage(notenoughmoneyimg);
+                notenough.life = 25;
+                notenough.scale = 3;
+                GameManager.Groups.ShopItems.add(notenough);
+                console.warn("NOT ENOUGH CASH BOI");
+    }
     //Function to Draw Shop Page
     static createShopPage(){
         image(shoppageimg, width/2, height/2);
     }
     //static Items = new Array();
 
+    //Function to Draw Shop Items
     static drawStdWeaponItems(){
 
         //OUTLINES
         for(let i = 0; i < 4; i++){
-            let timage;
-            let textlines = new Array();
-            let textlinesvals = new Array();
-            let spr = createSprite(300, (400) + (i * 100));
             switch(i){
                 case 0:
-                    timage = GameManager.shopItems.StdShot.img;
-                    textlines = Object.keys(GameManager.shopItems.StdShot);
-                    textlinesvals = Object.values(GameManager.shopItems.StdShot);
-                    textlines = textlines.map((e,i) => e.concat(": " + textlinesvals[i]));
-                    spr.onMousePressed = () => {
-                        GameManager.Groups.friendlybullets.removeSprites();
-                        GameManager.Groups.enemybullets.removeSprites();
-
-                        GameManager.player.ship.info.weapons = new weaponStaterWeaponLR();
-                    };
-                    GameManager.Groups.hoverToolTip.removeSprites();
+                    let STDShot = new ShopButton(GameManager.shopItems.StdShot, 300, (400) + (i* 100));
+                    STDShot.addEffect(weaponStaterWeaponLR);
                 break;
             
                 case 1:
-                    timage = GameManager.shopItems.LShot.img;
-                    textlines = Object.keys(GameManager.shopItems.LShot);
-                    textlinesvals = Object.values(GameManager.shopItems.LShot);
-                    textlines = textlines.map((e,i) => e.concat(": " + textlinesvals[i]))
-                    spr.onMousePressed = () => {
-                        if(GameManager.player.currentMoney >= textlinesvals[1] || textlinesvals[0] == true){
-                            GameManager.shopItems.LShot.bought = true;
-                            textlinesvals[0] == false ? GameManager.player.currentMoney -= textlinesvals[1] : 0;
-                            textlinesvals[0] = true;
-                            GameManager.Groups.friendlybullets.removeSprites();
-                            GameManager.Groups.enemybullets.removeSprites();
-                            GameManager.player.ship.info.weapons =  weaponSpreadLR();
-                        } else {
-                            console.log("NOT ENOUGH MONEY");
-                        }
-                    }
-
+                    let LShot = new ShopButton(GameManager.shopItems.LShot, 300, (400) + (i * 100));
+                    LShot.addEffect(weaponSpreadLR);
                 break;
+                case 2:
+                    let XShot = new ShopButton(GameManager.shopItems.XShot, 300, (400) + (i * 100));
+                    XShot.addEffect(weaponXLR);
+                break;
+                case 3:
+                    let SpreadShot = new ShopButton(GameManager.shopItems.SpreadShot, 300, (400) + (i * 100));
+                    SpreadShot.addEffect(weaponAllSpreadLR);
+                break;
+
                 default: 
-                    timage = shopbuttonimg;
+                    //timage = shopbuttonimg;
             }
                 
-                spr.addImage(timage);
-                spr.setDefaultCollider();
-                spr.mouseActive = true; 
-                spr.onMouseOver = function(){
-                    imageMode(CORNER);
-                    new ToolTip(textlines);
-
-                };
-                spr.onMouseOut = function(){
-
-                    GameManager.Groups.hoverToolTip.removeSprites();
-                    
-                };
-                //ITEM
-                GameManager.Groups.ShopItems.add(spr)
-                //Shop.Items.push(spr);
         }
+
+        let HealthUp = new ShopButton(GameManager.shopItems.HEALTHUP, 800, 400);
+        HealthUp.addPowerUp(Shop.PlayerIncreaseHealth)
+        let ShieldUp = new ShopButton(GameManager.shopItems.SHIELDUP, 800, 600);
+        ShieldUp.addPowerUp(Shop.PlayerIncreaseShield)
         for(let i = 0; i < 4; i++){
             image(shopbuttonimg, 400, (400) + (i * 100));
         }
 
     }
 
+    static PlayerIncreaseHealth(){
+        GameManager.player.ship.info.maxHealth += 100;
+        GameManager.player.ship.info.currentHealth = GameManager.player.ship.info.maxHealth;
+    }
+    static PlayerIncreaseShield(){
+        GameManager.player.ship.info.maxShield += 100;
+        GameManager.player.ship.info.currentShield = GameManager.player.ship.info.maxShield;
+    }
 }
+
+
 
 class ToolTip{
     constructor(infoArray){
@@ -93,8 +157,10 @@ class ToolTip{
     drawInfo(){
         this.sprite.position = {x: mouseX+125 , y:mouseY+25};
         fill('white');
+        
         this.info.map((e, i) => {
-            i < 3 ? text(e, mouseX + 35, mouseY + (i * 10)) : 0;
+            textSize(28/i);
+            i < 3 && i > 0? text(e, mouseX + 35, mouseY + (i * 15)) : 0;
         });
         // for(let txt of this.info){
         //     text(txt, mouseX+75, mouseY+25);
