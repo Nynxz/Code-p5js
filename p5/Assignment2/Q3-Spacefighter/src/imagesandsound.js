@@ -71,6 +71,8 @@ function preloadIMAGES(){
     enterbuttonimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/Menu/ENTERBUTTON.png');
     gameoverimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/Menu/GAMEOVER.png');
     spacefighterlogoimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/Menu/SpaceFighterLogo.png');
+    videoborderimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/ShopItems/videoborder.png');
+    
     //https://www.pngkey.com/detail/u2e6w7u2r5i1o0w7_screen-red-vignette-parallel/
     redhittedimg = loadImage('/p5/Assignment2/Q3-Spacefighter/Assets/screen-red-vignette.png');
     

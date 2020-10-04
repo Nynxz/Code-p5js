@@ -91,7 +91,8 @@ class Enemy{
             //Standard Shot
             if(this.ship.info.weapons[0].weapontype == WeaponPoint.WeaponTypes.Straight){
                 //Spawn a New Bullet
-                new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
+                let bullet = new Bullet(this.ship, this.ship.info.weapons[0], this.ship.info.weapons[0].bullet.type, 1);
+                bullet.sprite.maxSpeed = 5;
             }
             //Spread 360 Shot
             else if(this.ship.info.weapons[0].weapontype == WeaponPoint.WeaponTypes.spread360){

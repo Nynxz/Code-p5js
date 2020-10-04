@@ -263,6 +263,8 @@ class Player{
                 
                     //Save JSON
                     saveJSON(GameManager.highscores, 'highscores.json');
+
+                    location.reload();
                 };
             } else {
                 this.respawn();

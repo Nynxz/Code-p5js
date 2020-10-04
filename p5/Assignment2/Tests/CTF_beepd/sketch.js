@@ -11,16 +11,14 @@ function preload(){
 function errorre(){
     console.log("error")
 }
-
-function setup() {
-    loadStrings('hmere.txt', function(raw){rawtext = raw;console.log('retur' + rawtext);}, errorre);
-
-   
-    createCanvas(500, 500);
-    background(100);
-    
+let button;
+function setup() {  
+    button = createButton('button');
 }
 
 function draw() {
+    if(typeof(button) != 'undefined'){
+        button.remove();
+    }
 }
 

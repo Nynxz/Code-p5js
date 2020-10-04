@@ -74,8 +74,7 @@ function mouseClicked(){
 
 //TODO MOVE TO CONTROLS
 function keyPressed(){
-    if(keyCode == 27){
-        console.dir(allSprites.length);
+    if(keyCode == 27 && GameManager.player.ship.info.currentHealth > 0){
         if(GameManager.paused){
             unpauseGame();
         } else {
@@ -150,18 +149,21 @@ function gameLogic(){
                 loadScreen.resetBar();
                 //Clear screen
                 clear();
+                startMainVideo();
             });
         break;
 
         //If Currently in Main Menu
         case GameManager.statesE.MAINMENU:
-
+           
             //Draw Star Background
             Background.backgroundDraw();
             //Draw Main Menu
             mainmenu.drawMenu();
             imageMode(CENTER);
             image(spacefighterlogoimg, width/2, height/4, 1000, 500);
+            imageMode(CORNER)
+            image(videoborderimg, 10, 575, 580, 345);
         break;
 
         //If Currently in Playing

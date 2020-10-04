@@ -286,6 +286,8 @@ function createMAINMENU(){
             //CHANGE STATE
             GameManager.currentState = GameManager.statesE.PLAYING;
 
+            GameManager.video.hide();
+
             console.log("PLAY!");
             uiClicksound.play();
         }},
@@ -301,6 +303,8 @@ function createMAINMENU(){
                 
                 //CHANGE STATE
                 GameManager.currentState = GameManager.statesE.LEADERBOARD;
+
+                GameManager.video.hide();
 
                 console.log("LEADERBOARD!");
                 uiClicksound.play();
@@ -318,9 +322,10 @@ function createMAINMENU(){
     mainmenu.buttons[0].sprite.position.y = 650;
     //Leaderboard Button
     mainmenu.buttons[1].sprite.position.y = 900;
-    mainmenu.buttons[1].sprite.position.x = 1200;
+    mainmenu.buttons[1].sprite.position.x = width-200;
     mainmenu.buttons[1].sprite.scale = .75;
     //Options Button
+    mainmenu.buttons[2].sprite.x = width-400;
     mainmenu.buttons[2].sprite.scale = .75;
 }
 
@@ -406,11 +411,12 @@ function createLEADERBOARD(){
     let backButton = createSprite(width - 200, height - 80, 300, 100);
 
     //Bind Anonymous Function to onMousePressed
-    backButton.onMousePressed = () => {
+    backButton.onMouseReleased = () => {
         allSprites.clear();
         createMAINMENU();
         GameManager.currentState = GameManager.statesE.MAINMENU;
         uiClicksound.play();
+        GameManager.video.show();
     };
     //Add Image to Back Button
     backButton.addImage(backbuttonimg);
@@ -418,6 +424,8 @@ function createLEADERBOARD(){
 
 //Function to Draw Leader Board 
 function drawLEADERBOARDSCORES(){
+
+    
 
     //Change Font Colour to Black
     fill('black');
@@ -452,3 +460,10 @@ function drawGameOver(){
     image(gameoverimg, width/2 - (GameManager.settings.globalSettings.sidebarWidth/2), 200, 600,300);
 }
 
+function startMainVideo(){
+    GameManager.video = createVideo('/p5/Assignment2/Q3-Spacefighter/Assets/spinngvideo.mp4');
+    GameManager.video.position(0, 600);
+    GameManager.video.size(600, AUTO);
+    GameManager.video.volume(0);
+    GameManager.video.loop();
+}
